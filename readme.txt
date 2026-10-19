@@ -4,7 +4,7 @@ Tags: duplicate, clone, copy, post, page
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,20 @@ The plugin copies meta fields, taxonomies, featured images, and optionally attac
 
 == Changelog ==
 
+= 0.1.1 - 2026-10-19 =
+* Added side-by-side comparison screen for Rewrite & Republish
+* Added "Compare changes" link in rewrite notice
+* Added block editor toolbar menu items (Options menu)
+* Enhanced block editor with sidebar panel and toolbar access
+* Added quick edit integration with "Copy to new draft" button
+* Added scheduled republish UI with meta box and publish box warnings
+* Added success notices after duplication actions (dismissible)
+* Added success notice after successful republish
+* Improved admin notices throughout the plugin
+* Improved block editor integration
+* Fixed PHPCS compliance issues
+* Fixed PHP syntax validation
+
 = 0.1.0 - 2026-10-19 =
 * Initial release
 * Clone posts, pages, and custom post types
@@ -144,6 +158,9 @@ The plugin copies meta fields, taxonomies, featured images, and optionally attac
 * Block editor support
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+Adds comparison screen, enhanced block editor integration, quick edit support, and improved admin notices.
 
 = 0.1.0 =
 Initial release of Oli Duplicate Post.

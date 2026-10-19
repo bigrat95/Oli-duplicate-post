@@ -50,9 +50,9 @@ class Oli_DP_Permissions {
 		}
 
 		// Check if post type is enabled in settings.
-		$settings = get_option( 'oli_dp_settings', array() );
+		$settings           = get_option( 'oli_dp_settings', array() );
 		$enabled_post_types = isset( $settings['enabled_post_types'] ) ? $settings['enabled_post_types'] : array();
-		
+
 		if ( ! in_array( $post->post_type, $enabled_post_types, true ) ) {
 			return false;
 		}
@@ -60,17 +60,17 @@ class Oli_DP_Permissions {
 		// Check if user role is allowed.
 		$allowed_roles = isset( $settings['allowed_roles'] ) ? $settings['allowed_roles'] : array();
 		if ( ! empty( $allowed_roles ) ) {
-			$user = wp_get_current_user();
-			$user_roles = (array) $user->roles;
+			$user             = wp_get_current_user();
+			$user_roles       = (array) $user->roles;
 			$has_allowed_role = false;
-			
+
 			foreach ( $user_roles as $role ) {
 				if ( in_array( $role, $allowed_roles, true ) ) {
 					$has_allowed_role = true;
 					break;
 				}
 			}
-			
+
 			if ( ! $has_allowed_role ) {
 				return false;
 			}

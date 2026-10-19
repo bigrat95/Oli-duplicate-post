@@ -30,17 +30,19 @@ class Oli_DP_Admin_Bar {
 	public static function add_admin_bar_items( $wp_admin_bar ) {
 		// Check if admin bar items should be shown.
 		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
-		
+
 		if ( empty( $settings['show_admin_bar'] ) ) {
 			return;
 		}
 
 		// Get the current post.
 		$post = get_post();
-		
+
 		if ( ! $post ) {
 			// Try to get post from query string.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check to display admin bar items.
 			if ( isset( $_GET['post'] ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$post = get_post( absint( $_GET['post'] ) );
 			}
 		}
@@ -88,7 +90,7 @@ class Oli_DP_Admin_Bar {
 		// Rewrite & Republish action (only for published posts).
 		if ( 'publish' === $post->post_status ) {
 			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
-			
+
 			if ( ! $existing_rewrite ) {
 				$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
 				$wp_admin_bar->add_menu(

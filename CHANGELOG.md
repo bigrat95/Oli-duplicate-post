@@ -5,6 +5,28 @@ All notable changes to Oli Duplicate Post will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-10-19
+
+### Added
+- Side-by-side comparison screen for Rewrite & Republish (`admin.php?page=oli-dp-compare`)
+- "Compare changes" link in rewrite notice
+- Block editor toolbar menu items (Options menu → Clone, Copy to New Draft, Rewrite & Republish)
+- Enhanced block editor sidebar panel with all three duplication modes
+- Quick edit integration with "Copy to new draft" button
+- Scheduled republish UI with meta box showing republish schedule info
+- Publish box warning indicator for Rewrite & Republish mode
+- Success notices after duplication actions (dismissible)
+- Success notice after successful republish with transient-based messaging
+
+### Improved
+- Better admin notices throughout the plugin
+- Enhanced block editor integration with both sidebar and toolbar access
+- More intuitive Rewrite & Republish workflow with visual feedback
+
+### Fixed
+- PHPCS compliance issues
+- PHP syntax validation
+
 ## [0.1.0] - 2026-10-19
 
 ### Added
@@ -42,4 +64,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Capability checks for all operations
 - No external calls or tracking
 
+[0.1.1]: https://github.com/yourusername/oli-duplicate-post/releases/tag/0.1.1
 [0.1.0]: https://github.com/yourusername/oli-duplicate-post/releases/tag/0.1.0

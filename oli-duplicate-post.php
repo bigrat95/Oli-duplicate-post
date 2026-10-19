@@ -3,7 +3,7 @@
  * Plugin Name: Oli Duplicate Post
  * Plugin URI: https://olivierbigras.com/oli-duplicate-post/
  * Description: Clone posts, pages, custom post types with Clone, New Draft, and Rewrite & Republish features.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Olivier Bigras
  * Author URI: https://olivierbigras.com/
  * License: GPL v2 or later
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'OLI_DP_VERSION', '0.1.0' );
+define( 'OLI_DP_VERSION', '0.1.1' );
 define( 'OLI_DP_PLUGIN_FILE', __FILE__ );
 define( 'OLI_DP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OLI_DP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -44,8 +44,10 @@ require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-permissions.php';
 require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-settings.php';
 require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-duplicator.php';
 require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-rewrite-republish.php';
+require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-comparison.php';
 require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-hooks.php';
 require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-admin.php';
+require_once OLI_DP_PLUGIN_DIR . 'includes/class-oli-dp-quick-edit.php';
 require_once OLI_DP_PLUGIN_DIR . 'admin/class-oli-dp-post-list.php';
 require_once OLI_DP_PLUGIN_DIR . 'admin/class-oli-dp-bulk-actions.php';
 require_once OLI_DP_PLUGIN_DIR . 'admin/class-oli-dp-admin-bar.php';
@@ -60,11 +62,13 @@ function oli_dp_init() {
 	Oli_DP_Settings::init();
 	Oli_DP_Hooks::init();
 	Oli_DP_Admin::init();
+	Oli_DP_Quick_Edit::init();
 	Oli_DP_Post_List::init();
 	Oli_DP_Bulk_Actions::init();
 	Oli_DP_Admin_Bar::init();
 	Oli_DP_Meta_Box::init();
 	Oli_DP_Rewrite_Republish::init();
+	Oli_DP_Comparison::init();
 }
 add_action( 'init', 'oli_dp_init' );
 

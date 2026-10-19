@@ -33,7 +33,7 @@ class Oli_DP_Post_List {
 	public static function add_row_actions( $actions, $post ) {
 		// Check if row actions should be shown.
 		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
-		
+
 		if ( empty( $settings['show_row_actions'] ) ) {
 			return $actions;
 		}
@@ -46,7 +46,7 @@ class Oli_DP_Post_List {
 		$duplicate_actions = array();
 
 		// Clone action.
-		$clone_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
+		$clone_url                         = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
 		$duplicate_actions['oli_dp_clone'] = sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( $clone_url ),
@@ -56,7 +56,7 @@ class Oli_DP_Post_List {
 		);
 
 		// New Draft action.
-		$new_draft_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
+		$new_draft_url                         = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
 		$duplicate_actions['oli_dp_new_draft'] = sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( $new_draft_url ),
@@ -69,9 +69,9 @@ class Oli_DP_Post_List {
 		if ( 'publish' === $post->post_status ) {
 			// Check if there's already a rewrite copy.
 			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
-			
+
 			if ( ! $existing_rewrite ) {
-				$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
+				$rewrite_url                         = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
 				$duplicate_actions['oli_dp_rewrite'] = sprintf(
 					'<a href="%s" aria-label="%s">%s</a>',
 					esc_url( $rewrite_url ),
@@ -81,7 +81,7 @@ class Oli_DP_Post_List {
 				);
 			} else {
 				// Link to existing rewrite copy.
-				$edit_url = get_edit_post_link( $existing_rewrite );
+				$edit_url                            = get_edit_post_link( $existing_rewrite );
 				$duplicate_actions['oli_dp_rewrite'] = sprintf(
 					'<a href="%s" aria-label="%s">%s</a>',
 					esc_url( $edit_url ),
@@ -94,10 +94,10 @@ class Oli_DP_Post_List {
 
 		// Insert after 'edit' action if it exists.
 		if ( isset( $actions['edit'] ) ) {
-			$offset = array_search( 'edit', array_keys( $actions ), true );
+			$offset  = array_search( 'edit', array_keys( $actions ), true );
 			$actions = array_slice( $actions, 0, $offset + 1, true ) +
-					   $duplicate_actions +
-					   array_slice( $actions, $offset + 1, null, true );
+						$duplicate_actions +
+						array_slice( $actions, $offset + 1, null, true );
 		} else {
 			$actions = $duplicate_actions + $actions;
 		}

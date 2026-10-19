@@ -25,10 +25,8 @@ class Oli_DP_Admin {
 
 	/**
 	 * Enqueue admin scripts and styles.
-	 *
-	 * @param string $hook Current admin page hook.
 	 */
-	public static function enqueue_scripts( $hook ) {
+	public static function enqueue_scripts() {
 		// Add inline CSS for admin notices and UI.
 		$custom_css = '
 			.oli-dp-comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
@@ -37,7 +35,7 @@ class Oli_DP_Admin {
 			.oli-dp-comparison-table th { background-color: #f5f5f5; font-weight: 600; }
 			.oli-dp-comparison-diff { background-color: #fff8dc; }
 		';
-		
+
 		wp_add_inline_style( 'wp-admin', $custom_css );
 	}
 
@@ -53,9 +51,9 @@ class Oli_DP_Admin {
 			admin_url( 'options-general.php?page=oli-duplicate-post-settings' ),
 			__( 'Settings', 'oli-duplicate-post' )
 		);
-		
+
 		array_unshift( $links, $settings_link );
-		
+
 		return $links;
 	}
 }

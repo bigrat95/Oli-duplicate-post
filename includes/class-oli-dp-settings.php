@@ -31,38 +31,38 @@ class Oli_DP_Settings {
 	public static function get_default_settings() {
 		return array(
 			// What to copy.
-			'copy_title'       => true,
-			'copy_date'        => false,
-			'copy_status'      => false,
-			'copy_slug'        => false,
-			'copy_excerpt'     => true,
-			'copy_content'     => true,
-			'copy_template'    => true,
-			'copy_format'      => true,
-			'copy_author'      => false,
-			'copy_password'    => false,
-			'copy_menu_order'  => true,
-			'copy_attachments' => false,
-			'copy_children'    => false,
-			'copy_comments'    => false,
+			'copy_title'          => true,
+			'copy_date'           => false,
+			'copy_status'         => false,
+			'copy_slug'           => false,
+			'copy_excerpt'        => true,
+			'copy_content'        => true,
+			'copy_template'       => true,
+			'copy_format'         => true,
+			'copy_author'         => false,
+			'copy_password'       => false,
+			'copy_menu_order'     => true,
+			'copy_attachments'    => false,
+			'copy_children'       => false,
+			'copy_comments'       => false,
 
 			// Title settings.
-			'title_prefix'     => '',
-			'title_suffix'     => __( ' (Copy)', 'oli-duplicate-post' ),
+			'title_prefix'        => '',
+			'title_suffix'        => __( ' (Copy)', 'oli-duplicate-post' ),
 
 			// Meta and taxonomy settings.
-			'excluded_meta'    => '_edit_lock,_edit_last,_wp_old_slug,_wp_old_date',
+			'excluded_meta'       => '_edit_lock,_edit_last,_wp_old_slug,_wp_old_date',
 			'excluded_taxonomies' => '',
 
 			// Post types and roles.
-			'enabled_post_types' => array( 'post', 'page' ),
-			'allowed_roles'    => array( 'administrator', 'editor' ),
+			'enabled_post_types'  => array( 'post', 'page' ),
+			'allowed_roles'       => array( 'administrator', 'editor' ),
 
 			// UI locations.
-			'show_row_actions' => true,
-			'show_admin_bar'   => true,
-			'show_edit_screen' => true,
-			'show_bulk_actions' => true,
+			'show_row_actions'    => true,
+			'show_admin_bar'      => true,
+			'show_edit_screen'    => true,
+			'show_bulk_actions'   => true,
 		);
 	}
 
@@ -195,7 +195,7 @@ class Oli_DP_Settings {
 			'oli-duplicate-post-settings',
 			'oli_dp_advanced',
 			array(
-				'field' => 'excluded_meta',
+				'field'       => 'excluded_meta',
 				'description' => __( 'Comma-separated list of meta keys to exclude. Supports wildcards (*).', 'oli-duplicate-post' ),
 			)
 		);
@@ -207,7 +207,7 @@ class Oli_DP_Settings {
 			'oli-duplicate-post-settings',
 			'oli_dp_advanced',
 			array(
-				'field' => 'excluded_taxonomies',
+				'field'       => 'excluded_taxonomies',
 				'description' => __( 'Comma-separated list of taxonomies to exclude.', 'oli-duplicate-post' ),
 			)
 		);
@@ -232,10 +232,10 @@ class Oli_DP_Settings {
 
 		// UI locations fields.
 		$ui_fields = array(
-			'show_row_actions'   => __( 'Show in Row Actions', 'oli-duplicate-post' ),
-			'show_admin_bar'     => __( 'Show in Admin Bar', 'oli-duplicate-post' ),
-			'show_edit_screen'   => __( 'Show in Edit Screen', 'oli-duplicate-post' ),
-			'show_bulk_actions'  => __( 'Show Bulk Actions', 'oli-duplicate-post' ),
+			'show_row_actions'  => __( 'Show in Row Actions', 'oli-duplicate-post' ),
+			'show_admin_bar'    => __( 'Show in Admin Bar', 'oli-duplicate-post' ),
+			'show_edit_screen'  => __( 'Show in Edit Screen', 'oli-duplicate-post' ),
+			'show_bulk_actions' => __( 'Show Bulk Actions', 'oli-duplicate-post' ),
 		);
 
 		foreach ( $ui_fields as $field => $label ) {
@@ -292,8 +292,8 @@ class Oli_DP_Settings {
 	 */
 	public static function render_checkbox_field( $args ) {
 		$settings = get_option( 'oli_dp_settings', self::get_default_settings() );
-		$field = $args['field'];
-		$value = isset( $settings[ $field ] ) ? $settings[ $field ] : false;
+		$field    = $args['field'];
+		$value    = isset( $settings[ $field ] ) ? $settings[ $field ] : false;
 		?>
 		<label>
 			<input type="checkbox" name="oli_dp_settings[<?php echo esc_attr( $field ); ?>]" value="1" <?php checked( $value, true ); ?> />
@@ -308,8 +308,8 @@ class Oli_DP_Settings {
 	 */
 	public static function render_text_field( $args ) {
 		$settings = get_option( 'oli_dp_settings', self::get_default_settings() );
-		$field = $args['field'];
-		$value = isset( $settings[ $field ] ) ? $settings[ $field ] : '';
+		$field    = $args['field'];
+		$value    = isset( $settings[ $field ] ) ? $settings[ $field ] : '';
 		?>
 		<input type="text" name="oli_dp_settings[<?php echo esc_attr( $field ); ?>]" value="<?php echo esc_attr( $value ); ?>" class="regular-text" />
 		<?php
@@ -325,8 +325,8 @@ class Oli_DP_Settings {
 	 */
 	public static function render_textarea_field( $args ) {
 		$settings = get_option( 'oli_dp_settings', self::get_default_settings() );
-		$field = $args['field'];
-		$value = isset( $settings[ $field ] ) ? $settings[ $field ] : '';
+		$field    = $args['field'];
+		$value    = isset( $settings[ $field ] ) ? $settings[ $field ] : '';
 		?>
 		<textarea name="oli_dp_settings[<?php echo esc_attr( $field ); ?>]" rows="3" class="large-text"><?php echo esc_textarea( $value ); ?></textarea>
 		<?php
@@ -339,11 +339,11 @@ class Oli_DP_Settings {
 	 * Render post types field.
 	 */
 	public static function render_post_types_field() {
-		$settings = get_option( 'oli_dp_settings', self::get_default_settings() );
+		$settings           = get_option( 'oli_dp_settings', self::get_default_settings() );
 		$enabled_post_types = isset( $settings['enabled_post_types'] ) ? $settings['enabled_post_types'] : array();
-		
+
 		$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
-		
+
 		foreach ( $post_types as $post_type ) {
 			$checked = in_array( $post_type->name, $enabled_post_types, true );
 			?>
@@ -359,11 +359,11 @@ class Oli_DP_Settings {
 	 * Render roles field.
 	 */
 	public static function render_roles_field() {
-		$settings = get_option( 'oli_dp_settings', self::get_default_settings() );
+		$settings      = get_option( 'oli_dp_settings', self::get_default_settings() );
 		$allowed_roles = isset( $settings['allowed_roles'] ) ? $settings['allowed_roles'] : array();
-		
+
 		$roles = wp_roles()->roles;
-		
+
 		foreach ( $roles as $role_key => $role ) {
 			$checked = in_array( $role_key, $allowed_roles, true );
 			?>
@@ -407,10 +407,23 @@ class Oli_DP_Settings {
 
 		// Checkbox fields.
 		$checkbox_fields = array(
-			'copy_title', 'copy_date', 'copy_status', 'copy_slug', 'copy_excerpt',
-			'copy_content', 'copy_template', 'copy_format', 'copy_author',
-			'copy_password', 'copy_menu_order', 'copy_attachments', 'copy_children',
-			'copy_comments', 'show_row_actions', 'show_admin_bar', 'show_edit_screen',
+			'copy_title',
+			'copy_date',
+			'copy_status',
+			'copy_slug',
+			'copy_excerpt',
+			'copy_content',
+			'copy_template',
+			'copy_format',
+			'copy_author',
+			'copy_password',
+			'copy_menu_order',
+			'copy_attachments',
+			'copy_children',
+			'copy_comments',
+			'show_row_actions',
+			'show_admin_bar',
+			'show_edit_screen',
 			'show_bulk_actions',
 		);
 
@@ -423,7 +436,7 @@ class Oli_DP_Settings {
 		$sanitized['title_suffix'] = sanitize_text_field( $input['title_suffix'] ?? '' );
 
 		// Textarea fields.
-		$sanitized['excluded_meta'] = sanitize_textarea_field( $input['excluded_meta'] ?? '' );
+		$sanitized['excluded_meta']       = sanitize_textarea_field( $input['excluded_meta'] ?? '' );
 		$sanitized['excluded_taxonomies'] = sanitize_textarea_field( $input['excluded_taxonomies'] ?? '' );
 
 		// Array fields.

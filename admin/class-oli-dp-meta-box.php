@@ -29,13 +29,13 @@ class Oli_DP_Meta_Box {
 	public static function add_meta_box() {
 		// Check if edit screen should show duplicate box.
 		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
-		
+
 		if ( empty( $settings['show_edit_screen'] ) ) {
 			return;
 		}
 
 		$enabled_post_types = isset( $settings['enabled_post_types'] ) ? $settings['enabled_post_types'] : array();
-		
+
 		foreach ( $enabled_post_types as $post_type ) {
 			add_meta_box(
 				'oli_dp_duplicate_box',
@@ -59,9 +59,9 @@ class Oli_DP_Meta_Box {
 			return;
 		}
 
-		$clone_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
+		$clone_url     = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
 		$new_draft_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
-		
+
 		?>
 		<div class="oli-dp-meta-box">
 			<p>
@@ -77,7 +77,7 @@ class Oli_DP_Meta_Box {
 			<?php if ( 'publish' === $post->post_status ) : ?>
 				<?php
 				$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
-				
+
 				if ( ! $existing_rewrite ) {
 					$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
 					?>
@@ -105,33 +105,49 @@ class Oli_DP_Meta_Box {
 	public static function enqueue_block_editor_assets() {
 		// Check if edit screen should show duplicate box.
 		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
-		
+
 		if ( empty( $settings['show_edit_screen'] ) ) {
 			return;
 		}
 
 		$post = get_post();
-		
+
 		if ( ! $post || ! Oli_DP_Permissions::can_duplicate( $post->ID ) ) {
 			return;
+		}
+
+		$clone_url     = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
+		$new_draft_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
+		$rewrite_url   = '';
+
+		if ( 'publish' === $post->post_status ) {
+			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
+			if ( ! $existing_rewrite ) {
+				$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
+			}
 		}
 
 		// Add inline script to add duplicate buttons to block editor.
 		$inline_script = "
 		( function( wp ) {
-			if ( ! wp.plugins || ! wp.editPost || ! wp.element || ! wp.components ) {
+			if ( ! wp.plugins || ! wp.editPost || ! wp.element || ! wp.components || ! wp.data ) {
 				return;
 			}
 
 			var PluginDocumentSettingPanel = wp.editPost.PluginDocumentSettingPanel;
+			var PluginMoreMenuItem = wp.editPost.PluginMoreMenuItem;
 			var createElement = wp.element.createElement;
+			var Fragment = wp.element.Fragment;
 			var Button = wp.components.Button;
 			var registerPlugin = wp.plugins.registerPlugin;
+			var __ = wp.i18n.__;
 
+			var cloneUrl = '" . esc_js( $clone_url ) . "';
+			var newDraftUrl = '" . esc_js( $new_draft_url ) . "';
+			var rewriteUrl = '" . esc_js( $rewrite_url ) . "';
+
+			// Sidebar panel
 			var OliDPPanel = function() {
-				var cloneUrl = '" . esc_js( Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' ) ) . "';
-				var newDraftUrl = '" . esc_js( Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' ) ) . "';
-				
 				return createElement(
 					PluginDocumentSettingPanel,
 					{
@@ -156,16 +172,70 @@ class Oli_DP_Meta_Box {
 							{
 								href: newDraftUrl,
 								variant: 'secondary',
-								style: { width: '100%', justifyContent: 'center' }
+								style: { width: '100%', marginBottom: '8px', justifyContent: 'center' }
 							},
 							'" . esc_js( __( 'New Draft', 'oli-duplicate-post' ) ) . "'
-						)
+						),
+						rewriteUrl ? createElement(
+							Button,
+							{
+								href: rewriteUrl,
+								variant: 'secondary',
+								style: { width: '100%', justifyContent: 'center' }
+							},
+							'" . esc_js( __( 'Rewrite & Republish', 'oli-duplicate-post' ) ) . "'
+						) : null
 					)
 				);
 			};
 
+			// Toolbar menu items
+			var OliDPToolbarItems = function() {
+				return createElement(
+					Fragment,
+					null,
+					createElement(
+						PluginMoreMenuItem,
+						{
+							icon: 'admin-page',
+							onClick: function() {
+								window.location.href = cloneUrl;
+							}
+						},
+						'" . esc_js( __( 'Clone', 'oli-duplicate-post' ) ) . "'
+					),
+					createElement(
+						PluginMoreMenuItem,
+						{
+							icon: 'edit',
+							onClick: function() {
+								window.location.href = newDraftUrl;
+							}
+						},
+						'" . esc_js( __( 'Copy to New Draft', 'oli-duplicate-post' ) ) . "'
+					),
+					rewriteUrl ? createElement(
+						PluginMoreMenuItem,
+						{
+							icon: 'update',
+							onClick: function() {
+								window.location.href = rewriteUrl;
+							}
+						},
+						'" . esc_js( __( 'Rewrite & Republish', 'oli-duplicate-post' ) ) . "'
+					) : null
+				);
+			};
+
 			registerPlugin( 'oli-duplicate-post', {
-				render: OliDPPanel,
+				render: function() {
+					return createElement(
+						Fragment,
+						null,
+						createElement(OliDPPanel),
+						createElement(OliDPToolbarItems)
+					);
+				},
 				icon: null
 			} );
 		} )( window.wp );

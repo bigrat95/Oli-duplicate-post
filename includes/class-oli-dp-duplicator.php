@@ -25,7 +25,7 @@ class Oli_DP_Duplicator {
 	 */
 	public static function duplicate( $post_id, $mode = 'clone', $args = array() ) {
 		$post = get_post( $post_id );
-		
+
 		if ( ! $post ) {
 			return new WP_Error( 'invalid_post', __( 'Invalid post ID.', 'oli-duplicate-post' ) );
 		}
@@ -119,15 +119,15 @@ class Oli_DP_Duplicator {
 		$current_user = wp_get_current_user();
 
 		$new_post_data = array(
-			'post_type'    => $post->post_type,
-			'post_status'  => 'draft',
+			'post_type'   => $post->post_type,
+			'post_status' => 'draft',
 		);
 
 		// Title.
 		if ( $settings['copy_title'] ) {
-			$title = $post->post_title;
-			$prefix = $settings['title_prefix'] ?? '';
-			$suffix = $settings['title_suffix'] ?? '';
+			$title                       = $post->post_title;
+			$prefix                      = $settings['title_prefix'] ?? '';
+			$suffix                      = $settings['title_suffix'] ?? '';
 			$new_post_data['post_title'] = $prefix . $title . $suffix;
 		} else {
 			$new_post_data['post_title'] = '';
@@ -145,7 +145,7 @@ class Oli_DP_Duplicator {
 
 		// Date.
 		if ( $settings['copy_date'] ) {
-			$new_post_data['post_date'] = $post->post_date;
+			$new_post_data['post_date']     = $post->post_date;
 			$new_post_data['post_date_gmt'] = $post->post_date_gmt;
 		}
 
@@ -184,7 +184,7 @@ class Oli_DP_Duplicator {
 
 		// Comment status.
 		$new_post_data['comment_status'] = $post->comment_status;
-		$new_post_data['ping_status'] = $post->ping_status;
+		$new_post_data['ping_status']    = $post->ping_status;
 
 		return $new_post_data;
 	}
@@ -198,14 +198,14 @@ class Oli_DP_Duplicator {
 	 */
 	private static function copy_post_meta( $original_post_id, $new_post_id, $settings ) {
 		$post_meta = get_post_meta( $original_post_id );
-		
+
 		// Get excluded meta keys.
 		$excluded_meta = isset( $settings['excluded_meta'] ) ? $settings['excluded_meta'] : '';
 		$excluded_keys = array_map( 'trim', explode( ',', $excluded_meta ) );
-		
+
 		// Always exclude some internal keys.
 		$default_excluded = array( '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_old_date', '_thumbnail_id' );
-		$excluded_keys = array_merge( $excluded_keys, $default_excluded );
+		$excluded_keys    = array_merge( $excluded_keys, $default_excluded );
 
 		foreach ( $post_meta as $meta_key => $meta_values ) {
 			// Check if meta key should be excluded.
@@ -252,12 +252,12 @@ class Oli_DP_Duplicator {
 
 			// Convert wildcard pattern to regex.
 			$regex_pattern = '/^' . str_replace( array( '\*', '\?' ), array( '.*', '.' ), preg_quote( $pattern, '/' ) ) . '$/';
-			
+
 			if ( preg_match( $regex_pattern, $meta_key ) ) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -269,12 +269,12 @@ class Oli_DP_Duplicator {
 	 * @param array $settings         The settings array.
 	 */
 	private static function copy_taxonomies( $original_post_id, $new_post_id, $settings ) {
-		$post = get_post( $original_post_id );
+		$post       = get_post( $original_post_id );
 		$taxonomies = get_object_taxonomies( $post->post_type );
-		
+
 		// Get excluded taxonomies.
 		$excluded_taxonomies = isset( $settings['excluded_taxonomies'] ) ? $settings['excluded_taxonomies'] : '';
-		$excluded_tax_array = array_map( 'trim', explode( ',', $excluded_taxonomies ) );
+		$excluded_tax_array  = array_map( 'trim', explode( ',', $excluded_taxonomies ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
 			// Check if taxonomy should be excluded.
@@ -283,7 +283,7 @@ class Oli_DP_Duplicator {
 			}
 
 			$terms = wp_get_object_terms( $original_post_id, $taxonomy, array( 'fields' => 'ids' ) );
-			
+
 			if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
 				wp_set_object_terms( $new_post_id, $terms, $taxonomy );
 			}
@@ -348,11 +348,11 @@ class Oli_DP_Duplicator {
 
 		foreach ( $children as $child ) {
 			// Recursively duplicate child posts.
-			$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+			$settings                  = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
 			$settings['copy_children'] = false; // Prevent infinite recursion.
-			
+
 			$new_child_id = self::duplicate( $child->ID, 'clone', $settings );
-			
+
 			if ( ! is_wp_error( $new_child_id ) ) {
 				wp_update_post(
 					array(
@@ -397,7 +397,7 @@ class Oli_DP_Duplicator {
 			);
 
 			$new_comment_id = wp_insert_comment( $new_comment_data );
-			
+
 			if ( $new_comment_id ) {
 				$comment_map[ $comment->comment_ID ] = $new_comment_id;
 
