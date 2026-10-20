@@ -10,7 +10,7 @@
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>
-	<arg value="sp"/>
+	<arg value="s"/>
 
 	<rule ref="WordPress"/>
 

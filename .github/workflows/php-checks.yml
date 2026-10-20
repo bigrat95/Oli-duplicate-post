@@ -68,7 +68,7 @@ jobs:
     - name: Run PHPCS
       run: |
         set -o pipefail
-        vendor/bin/phpcs --report=checkstyle | cs2pr
+        vendor/bin/phpcs -q --report=checkstyle | cs2pr
 
   plugin-check:
     name: WordPress Plugin Check Ready
