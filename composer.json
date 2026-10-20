@@ -1,0 +1,31 @@
+{
+	"name": "olivierbigras/oli-duplicate-post",
+	"description": "Clone posts, pages, and custom post types with Clone, New Draft, and Rewrite & Republish.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://github.com/olivierbigras/Oli-duplicate-post",
+	"authors": [
+		{
+			"name": "Olivier Bigras",
+			"homepage": "https://olivierbigras.com/"
+		}
+	],
+	"require": {
+		"php": ">=7.4"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"wp-coding-standards/wpcs": "^3.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf",
+		"lint": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+		"smoke": "php tests/smoke-test.php"
+	}
+}

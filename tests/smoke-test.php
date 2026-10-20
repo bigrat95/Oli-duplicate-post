@@ -10,83 +10,125 @@
  * @package Oli_Duplicate_Post
  */
 
-// Color output helpers.
-function test_pass( $message ) {
+/**
+ * Print a passing test line.
+ *
+ * @param string $message Message to print.
+ */
+function oli_dp_test_pass( $message ) {
 	echo "\033[0;32m✓\033[0m " . $message . "\n";
 }
 
-function test_fail( $message ) {
+/**
+ * Print a failing test line.
+ *
+ * @param string $message Message to print.
+ */
+function oli_dp_test_fail( $message ) {
 	echo "\033[0;31m✗\033[0m " . $message . "\n";
-	return false;
 }
 
-function test_info( $message ) {
-	echo "\033[0;34mℹ\033[0m " . $message . "\n";
-}
-
-function test_section( $message ) {
+/**
+ * Print a section header.
+ *
+ * @param string $message Section title.
+ */
+function oli_dp_test_section( $message ) {
 	echo "\n\033[1;36m" . $message . "\033[0m\n";
 	echo str_repeat( '=', 60 ) . "\n";
 }
 
-// Track results.
-$total_tests  = 0;
-$passed_tests = 0;
+/**
+ * Recursively collect PHP files, skipping vendor.
+ *
+ * @param string $dir Directory to scan.
+ * @return array
+ */
+function oli_dp_collect_php_files( $dir ) {
+	$files  = array();
+	$skip   = array( 'vendor', 'node_modules', '.git' );
+	$handle = opendir( $dir );
 
-test_section( 'Oli Duplicate Post - Smoke Tests' );
+	if ( false === $handle ) {
+		return $files;
+	}
 
-// Test 1: Check main plugin file exists.
-test_section( 'File Structure Tests' );
-++$total_tests;
-if ( file_exists( __DIR__ . '/../oli-duplicate-post.php' ) ) {
-	test_pass( 'Main plugin file exists' );
-	++$passed_tests;
-} else {
-	test_fail( 'Main plugin file not found' );
+	while ( false !== ( $entry = readdir( $handle ) ) ) {
+		if ( '.' === $entry || '..' === $entry || in_array( $entry, $skip, true ) ) {
+			continue;
+		}
+
+		$path = $dir . '/' . $entry;
+		if ( is_dir( $path ) ) {
+			$files = array_merge( $files, oli_dp_collect_php_files( $path ) );
+		} elseif ( '.php' === substr( $entry, -4 ) ) {
+			$files[] = $path;
+		}
+	}
+
+	closedir( $handle );
+	return $files;
 }
 
-// Test 2: Check required directories exist.
+$total_tests  = 0;
+$passed_tests = 0;
+$plugin_root  = dirname( __DIR__ );
+
+oli_dp_test_section( 'Oli Duplicate Post - Smoke Tests' );
+
+oli_dp_test_section( 'File Structure Tests' );
+++$total_tests;
+if ( file_exists( $plugin_root . '/oli-duplicate-post.php' ) ) {
+	oli_dp_test_pass( 'Main plugin file exists' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Main plugin file not found' );
+}
+
 $required_dirs = array( 'includes', 'admin', 'languages', 'tests', '.github/workflows' );
 foreach ( $required_dirs as $dir ) {
 	++$total_tests;
-	if ( is_dir( __DIR__ . '/../' . $dir ) ) {
-		test_pass( "Directory exists: {$dir}" );
+	if ( is_dir( $plugin_root . '/' . $dir ) ) {
+		oli_dp_test_pass( "Directory exists: {$dir}" );
 		++$passed_tests;
 	} else {
-		test_fail( "Directory missing: {$dir}" );
+		oli_dp_test_fail( "Directory missing: {$dir}" );
 	}
 }
 
-// Test 3: Check required class files exist.
 $required_files = array(
 	'includes/class-oli-dp-permissions.php',
 	'includes/class-oli-dp-settings.php',
 	'includes/class-oli-dp-duplicator.php',
 	'includes/class-oli-dp-rewrite-republish.php',
+	'includes/class-oli-dp-comparison.php',
 	'includes/class-oli-dp-hooks.php',
 	'includes/class-oli-dp-admin.php',
+	'includes/class-oli-dp-quick-edit.php',
 	'admin/class-oli-dp-post-list.php',
 	'admin/class-oli-dp-bulk-actions.php',
 	'admin/class-oli-dp-admin-bar.php',
 	'admin/class-oli-dp-meta-box.php',
+	'phpcs.xml.dist',
+	'composer.json',
 );
 
 foreach ( $required_files as $file ) {
 	++$total_tests;
-	if ( file_exists( __DIR__ . '/../' . $file ) ) {
-		test_pass( "File exists: {$file}" );
+	if ( file_exists( $plugin_root . '/' . $file ) ) {
+		oli_dp_test_pass( "File exists: {$file}" );
 		++$passed_tests;
 	} else {
-		test_fail( "File missing: {$file}" );
+		oli_dp_test_fail( "File missing: {$file}" );
 	}
 }
 
-// Test 4: Check readme.txt exists and has required headers.
-test_section( 'WordPress.org Compliance Tests' );
+oli_dp_test_section( 'WordPress.org Compliance Tests' );
 ++$total_tests;
-$readme_path = __DIR__ . '/../readme.txt';
+$readme_path = $plugin_root . '/readme.txt';
+$readme_content = '';
 if ( file_exists( $readme_path ) ) {
-	test_pass( 'readme.txt exists' );
+	oli_dp_test_pass( 'readme.txt exists' );
 	++$passed_tests;
 
 	$readme_content   = file_get_contents( $readme_path );
@@ -102,73 +144,89 @@ if ( file_exists( $readme_path ) ) {
 
 	foreach ( $required_headers as $header ) {
 		++$total_tests;
-		if ( strpos( $readme_content, $header ) !== false ) {
-			test_pass( "readme.txt contains: {$header}" );
+		if ( false !== strpos( $readme_content, $header ) ) {
+			oli_dp_test_pass( "readme.txt contains: {$header}" );
 			++$passed_tests;
 		} else {
-			test_fail( "readme.txt missing: {$header}" );
+			oli_dp_test_fail( "readme.txt missing: {$header}" );
 		}
 	}
+
+	++$total_tests;
+	if ( false !== strpos( $readme_content, 'Contributors: bigrat95' ) ) {
+		oli_dp_test_pass( 'readme.txt Contributors uses wordpress.org username bigrat95' );
+		++$passed_tests;
+	} else {
+		oli_dp_test_fail( 'readme.txt Contributors should remain bigrat95' );
+	}
+
+	++$total_tests;
+	if ( false !== strpos( $readme_content, 'github.com/olivierbigras' ) && false === strpos( $readme_content, 'github.com/bigrat95' ) ) {
+		oli_dp_test_pass( 'readme.txt GitHub URL uses olivierbigras owner' );
+		++$passed_tests;
+	} else {
+		oli_dp_test_fail( 'readme.txt GitHub URL should use github.com/olivierbigras' );
+	}
 } else {
-	test_fail( 'readme.txt not found' );
+	oli_dp_test_fail( 'readme.txt not found' );
 }
 
-// Test 5: Check for proper prefixing in main plugin file.
-test_section( 'Code Standards Tests' );
+oli_dp_test_section( 'Code Standards Tests' );
+$main_file = file_get_contents( $plugin_root . '/oli-duplicate-post.php' );
+$plugin_php = '';
+foreach ( oli_dp_collect_php_files( $plugin_root ) as $php_path ) {
+	if ( false !== strpos( $php_path, '/tests/' ) ) {
+		continue;
+	}
+	$plugin_php .= file_get_contents( $php_path ) . "\n";
+}
+
 ++$total_tests;
-$main_file = file_get_contents( __DIR__ . '/../oli-duplicate-post.php' );
-
-// Check for proper prefixes.
-$has_oli_dp_prefix = preg_match( '/oli_dp_/i', $main_file );
-$has_class_prefix  = preg_match( '/class Oli_DP_/i', $main_file );
-
-if ( $has_oli_dp_prefix && $has_class_prefix ) {
-	test_pass( 'Proper prefixing used (oli_dp_ and Oli_DP_)' );
+if ( preg_match( '/oli_dp_/', $plugin_php ) && preg_match( '/Oli_DP_/', $plugin_php ) ) {
+	oli_dp_test_pass( 'Proper prefixing used (oli_dp_ and Oli_DP_)' );
 	++$passed_tests;
 } else {
-	test_fail( 'Prefix issues found' );
+	oli_dp_test_fail( 'Prefix issues found' );
 }
 
-// Test 6: Check for security best practices.
 ++$total_tests;
-$has_abspath_check = preg_match( '/if\s*\(\s*!\s*defined\s*\(\s*[\'"]ABSPATH[\'"]\s*\)\s*\)/', $main_file );
-
-if ( $has_abspath_check ) {
-	test_pass( 'ABSPATH security check present' );
+if ( preg_match( '/if\s*\(\s*!\s*defined\s*\(\s*[\'"]ABSPATH[\'"]\s*\)\s*\)/', $main_file ) ) {
+	oli_dp_test_pass( 'ABSPATH security check present' );
 	++$passed_tests;
 } else {
-	test_fail( 'ABSPATH security check missing' );
+	oli_dp_test_fail( 'ABSPATH security check missing' );
 }
 
-// Test 7: Check for text domain.
 ++$total_tests;
-$has_text_domain = preg_match( '/Text Domain:\s*oli-duplicate-post/', $main_file );
-
-if ( $has_text_domain ) {
-	test_pass( 'Correct text domain declared' );
+if ( preg_match( '/Text Domain:\s*oli-duplicate-post/', $main_file ) ) {
+	oli_dp_test_pass( 'Correct text domain declared' );
 	++$passed_tests;
 } else {
-	test_fail( 'Text domain issue' );
+	oli_dp_test_fail( 'Text domain issue' );
 }
 
-// Test 8: Check plugin version consistency.
 ++$total_tests;
 $version_in_main   = preg_match( '/Version:\s*([\d.]+)/', $main_file, $main_version );
 $version_in_readme = preg_match( '/Stable tag:\s*([\d.]+)/', $readme_content, $readme_version );
-
 if ( $version_in_main && $version_in_readme && $main_version[1] === $readme_version[1] ) {
-	test_pass( "Version consistency: {$main_version[1]}" );
+	oli_dp_test_pass( "Version consistency: {$main_version[1]}" );
 	++$passed_tests;
 } else {
-	test_fail( 'Version mismatch between plugin file and readme.txt' );
+	oli_dp_test_fail( 'Version mismatch between plugin file and readme.txt' );
 }
 
-// Test 9: Syntax check all PHP files.
-test_section( 'PHP Syntax Tests' );
+++$total_tests;
+if ( preg_match( '/0\.1\.1/', $main_file ) ) {
+	oli_dp_test_pass( 'Plugin version is 0.1.1' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Plugin version is not 0.1.1' );
+}
 
-$php_files = glob( __DIR__ . '/../*.php' );
-$php_files = array_merge( $php_files, glob( __DIR__ . '/../includes/*.php' ) );
-$php_files = array_merge( $php_files, glob( __DIR__ . '/../admin/*.php' ) );
+oli_dp_test_section( 'PHP Syntax Tests' );
+$php_files = glob( $plugin_root . '/*.php' );
+$php_files = array_merge( $php_files, glob( $plugin_root . '/includes/*.php' ) );
+$php_files = array_merge( $php_files, glob( $plugin_root . '/admin/*.php' ) );
 
 foreach ( $php_files as $php_file ) {
 	++$total_tests;
@@ -176,95 +234,139 @@ foreach ( $php_files as $php_file ) {
 	$return_var = 0;
 	exec( 'php -l ' . escapeshellarg( $php_file ) . ' 2>&1', $output, $return_var );
 
-	if ( $return_var === 0 ) {
-		test_pass( 'Valid syntax: ' . basename( $php_file ) );
+	if ( 0 === $return_var ) {
+		oli_dp_test_pass( 'Valid syntax: ' . basename( $php_file ) );
 		++$passed_tests;
 	} else {
-		test_fail( 'Syntax error in: ' . basename( $php_file ) );
+		oli_dp_test_fail( 'Syntax error in: ' . basename( $php_file ) );
 		echo '  ' . implode( "\n  ", $output ) . "\n";
 	}
 }
 
-// Test 10: Check for common WordPress function usage.
-test_section( 'WordPress Standards Tests' );
-
-$duplicator_file = file_get_contents( __DIR__ . '/../includes/class-oli-dp-duplicator.php' );
+oli_dp_test_section( 'WordPress Standards Tests' );
 
 ++$total_tests;
-if ( preg_match( '/wp_insert_post/', $duplicator_file ) ) {
-	test_pass( 'Uses wp_insert_post() for post creation' );
+if ( preg_match( '/wp_insert_post/', $plugin_php ) ) {
+	oli_dp_test_pass( 'Uses wp_insert_post() for post creation' );
 	++$passed_tests;
 } else {
-	test_fail( 'wp_insert_post() not found in duplicator' );
+	oli_dp_test_fail( 'wp_insert_post() not found' );
 }
 
 ++$total_tests;
-if ( preg_match( '/sanitize_|esc_/', $duplicator_file ) ) {
-	test_pass( 'Uses sanitization/escaping functions' );
+if ( preg_match( '/sanitize_|esc_html|esc_attr|esc_url/', $plugin_php ) ) {
+	oli_dp_test_pass( 'Uses sanitization/escaping functions' );
 	++$passed_tests;
 } else {
-	test_fail( 'No sanitization functions found' );
+	oli_dp_test_fail( 'No sanitization functions found' );
 }
 
-$settings_file = file_get_contents( __DIR__ . '/../includes/class-oli-dp-settings.php' );
-
 ++$total_tests;
-if ( preg_match( '/wp_verify_nonce|wp_create_nonce/', $settings_file . $main_file ) ) {
-	test_pass( 'Uses nonce verification' );
+if ( preg_match( '/wp_verify_nonce|wp_create_nonce/', $plugin_php ) ) {
+	oli_dp_test_pass( 'Uses nonce verification' );
 	++$passed_tests;
 } else {
-	test_fail( 'Nonce functions not found' );
+	oli_dp_test_fail( 'Nonce functions not found' );
 }
 
-// Test 11: Check GitHub Actions workflow.
-test_section( 'CI/CD Tests' );
+oli_dp_test_section( 'Feature Parity Tests' );
+
 ++$total_tests;
-$workflow_file = __DIR__ . '/../.github/workflows/php-checks.yml';
+if ( false !== strpos( $plugin_php, 'oli-dp-compare' ) ) {
+	oli_dp_test_pass( 'Rewrite & Republish comparison screen is registered' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Comparison screen missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'PluginMoreMenuItem' ) ) {
+	oli_dp_test_pass( 'Block editor toolbar/menu items present' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Block editor toolbar items missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'Copy to New Draft' ) ) {
+	oli_dp_test_pass( 'Quick edit / Copy to New Draft link present' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Copy to New Draft link missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'oli_dp_duplicated' ) ) {
+	oli_dp_test_pass( 'Success notices after duplication actions present' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Duplication success notices missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'Republish Schedule' ) ) {
+	oli_dp_test_pass( 'Scheduled republish UI present' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Scheduled republish UI missing' );
+}
+
+oli_dp_test_section( 'CI/CD Tests' );
+++$total_tests;
+$workflow_file = $plugin_root . '/.github/workflows/php-checks.yml';
 if ( file_exists( $workflow_file ) ) {
-	test_pass( 'GitHub Actions workflow exists' );
+	oli_dp_test_pass( 'GitHub Actions workflow exists' );
 	++$passed_tests;
 
 	$workflow_content = file_get_contents( $workflow_file );
 
 	++$total_tests;
-	if ( strpos( $workflow_content, 'php -l' ) !== false || strpos( $workflow_content, 'syntax' ) !== false ) {
-		test_pass( 'Workflow includes syntax checking' );
+	if ( false !== strpos( $workflow_content, 'php -l' ) ) {
+		oli_dp_test_pass( 'Workflow includes syntax checking' );
 		++$passed_tests;
 	} else {
-		test_fail( 'Workflow missing syntax check' );
+		oli_dp_test_fail( 'Workflow missing syntax check' );
 	}
 
 	++$total_tests;
-	if ( strpos( $workflow_content, 'phpcs' ) !== false || strpos( $workflow_content, 'PHPCS' ) !== false ) {
-		test_pass( 'Workflow includes PHPCS' );
+	if ( false !== strpos( $workflow_content, 'phpcs' ) ) {
+		oli_dp_test_pass( 'Workflow includes PHPCS' );
 		++$passed_tests;
 	} else {
-		test_fail( 'Workflow missing PHPCS' );
+		oli_dp_test_fail( 'Workflow missing PHPCS' );
 	}
 } else {
-	test_fail( 'GitHub Actions workflow not found' );
+	oli_dp_test_fail( 'GitHub Actions workflow not found' );
 }
 
-// Test 12: Check for proper documentation.
-test_section( 'Documentation Tests' );
+oli_dp_test_section( 'Documentation Tests' );
 ++$total_tests;
-if ( file_exists( __DIR__ . '/../CHANGELOG.md' ) ) {
-	test_pass( 'CHANGELOG.md exists' );
+if ( file_exists( $plugin_root . '/CHANGELOG.md' ) ) {
+	oli_dp_test_pass( 'CHANGELOG.md exists' );
 	++$passed_tests;
 } else {
-	test_fail( 'CHANGELOG.md not found' );
+	oli_dp_test_fail( 'CHANGELOG.md not found' );
 }
 
 ++$total_tests;
-if ( file_exists( __DIR__ . '/../README.md' ) ) {
-	test_pass( 'README.md exists' );
+if ( file_exists( $plugin_root . '/README.md' ) ) {
+	oli_dp_test_pass( 'README.md exists' );
 	++$passed_tests;
 } else {
-	test_fail( 'README.md not found' );
+	oli_dp_test_fail( 'README.md not found' );
 }
 
-// Final summary.
-test_section( 'Test Summary' );
+++$total_tests;
+$changelog = file_get_contents( $plugin_root . '/CHANGELOG.md' );
+$readme_md = file_get_contents( $plugin_root . '/README.md' );
+if ( false === strpos( $changelog . $readme_md, 'github.com/bigrat95' ) && false !== strpos( $changelog . $readme_md, 'github.com/olivierbigras' ) ) {
+	oli_dp_test_pass( 'Docs use github.com/olivierbigras URLs' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Docs still contain github.com/bigrat95 or missing olivierbigras GitHub URL' );
+}
+
+oli_dp_test_section( 'Test Summary' );
 
 $pass_rate = ( $passed_tests / $total_tests ) * 100;
 
@@ -278,10 +380,7 @@ echo "\n";
 if ( $passed_tests === $total_tests ) {
 	echo "\033[1;32m✓ All tests passed!\033[0m\n\n";
 	exit( 0 );
-} elseif ( $pass_rate >= 80 ) {
-	echo "\033[1;33m⚠ Some tests failed, but pass rate is acceptable.\033[0m\n\n";
-	exit( 0 );
-} else {
-	echo "\033[1;31m✗ Too many tests failed.\033[0m\n\n";
-	exit( 1 );
 }
+
+echo "\033[1;31m✗ Smoke tests failed.\033[0m\n\n";
+exit( 1 );

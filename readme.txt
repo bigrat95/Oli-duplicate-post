@@ -171,6 +171,6 @@ Oli Duplicate Post does not collect, store, or transmit any user data. All dupli
 
 == Development ==
 
-Development happens on GitHub: https://github.com/yourusername/oli-duplicate-post
+Development happens on GitHub: https://github.com/olivierbigras/Oli-duplicate-post
 
 Contributions are welcome!

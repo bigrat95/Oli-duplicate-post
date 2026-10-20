@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - PHPCS compliance issues
 - PHP syntax validation
+- GitHub Actions PHPCS job (exclude CLI smoke tests, add phpcs.xml.dist and Composer install)
+- GitHub repository URLs after owner rename to olivierbigras (wordpress.org contributor remains bigrat95)
 
 ## [0.1.0] - 2026-10-19
 
@@ -64,5 +66,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Capability checks for all operations
 - No external calls or tracking
 
-[0.1.1]: https://github.com/yourusername/oli-duplicate-post/releases/tag/0.1.1
-[0.1.0]: https://github.com/yourusername/oli-duplicate-post/releases/tag/0.1.0
+[0.1.1]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.1
+[0.1.0]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.0

@@ -74,6 +74,6 @@ class Oli_DP_Quick_Edit {
 	 * @param string $post_type   Post type.
 	 */
 	public static function render_quick_edit_custom_box( $column_name, $post_type ) {
-		// Reserved for future use.
+		unset( $column_name, $post_type );
 	}
 }

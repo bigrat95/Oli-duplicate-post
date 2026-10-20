@@ -123,6 +123,7 @@ GPL v2 or later - see LICENSE file for details.
 **Olivier Bigras**
 - Website: [olivierbigras.com](https://olivierbigras.com/)
 - WordPress.org: [bigrat95](https://profiles.wordpress.org/bigrat95/)
+- GitHub: [olivierbigras/Oli-duplicate-post](https://github.com/olivierbigras/Oli-duplicate-post)
 
 ## Contributing
 

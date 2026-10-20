@@ -32,7 +32,6 @@ wp-content/plugins/hello.php
 # Composer
 composer.phar
 /vendor/
-composer.lock
 
 # Environment files
 .env

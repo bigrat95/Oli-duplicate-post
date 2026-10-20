@@ -2,7 +2,7 @@ name: PHP Checks
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'cursor/**' ]
   pull_request:
     branches: [ main, develop ]
 
@@ -10,86 +10,81 @@ jobs:
   syntax-check:
     name: PHP Syntax Check
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
-    
+
     - name: Check PHP syntax
       run: |
         find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
-    
+
     - name: Run smoke tests
       run: php tests/smoke-test.php
 
   phpcs:
     name: PHPCS - WordPress Coding Standards
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
         tools: composer, cs2pr
-    
-    - name: Get Composer Cache Directory
+
+    - name: Get Composer cache directory
       id: composer-cache
-      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-    
+      run: echo "dir=$(composer config cache-files-dir --no-interaction)" >> "$GITHUB_OUTPUT"
+
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-composer-
-    
+
     - name: Install PHPCS and WordPress Coding Standards
-      run: |
-        composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-        composer global require --dev wp-coding-standards/wpcs:"^3.0"
-        composer global require --dev phpcsstandards/phpcsutils:"^1.0"
-        composer global require --dev phpcsstandards/phpcsextra:"^1.0"
-        echo "$(composer global config bin-dir --absolute --quiet)" >> $GITHUB_PATH
-    
+      run: composer install --no-progress --no-interaction --prefer-dist
+
     - name: Show PHPCS configuration
       run: |
-        phpcs --version
-        phpcs -i
-    
+        vendor/bin/phpcs --version
+        vendor/bin/phpcs -i
+
     - name: Run PHPCS
       run: |
-        phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* --report=checkstyle . | cs2pr
-      continue-on-error: false
+        set -o pipefail
+        vendor/bin/phpcs --report=checkstyle | cs2pr
 
   plugin-check:
     name: WordPress Plugin Check Ready
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Check for required files
       run: |
         echo "Checking for WordPress.org required files..."
         test -f readme.txt && echo "✓ readme.txt found" || (echo "✗ readme.txt missing" && exit 1)
         test -f oli-duplicate-post.php && echo "✓ Main plugin file found" || (echo "✗ Main plugin file missing" && exit 1)
         test -f CHANGELOG.md && echo "✓ CHANGELOG.md found" || (echo "✗ CHANGELOG.md missing" && exit 1)
-    
+
     - name: Validate plugin headers
       run: |
         echo "Checking plugin headers..."
@@ -97,24 +92,28 @@ jobs:
         grep -q "Version:" oli-duplicate-post.php && echo "✓ Version found" || (echo "✗ Version missing" && exit 1)
         grep -q "Text Domain: oli-duplicate-post" oli-duplicate-post.php && echo "✓ Text Domain correct" || (echo "✗ Text Domain issue" && exit 1)
         grep -q "License:" oli-duplicate-post.php && echo "✓ License found" || (echo "✗ License missing" && exit 1)
-    
+
     - name: Check for security best practices
       run: |
         echo "Checking security best practices..."
-        grep -r "defined( 'ABSPATH' )" --include="*.php" . > /dev/null && echo "✓ ABSPATH checks present" || (echo "✗ Missing ABSPATH checks" && exit 1)
-        ! grep -r "eval(" --include="*.php" . && echo "✓ No eval() usage" || (echo "⚠ Found eval() - security risk" && exit 1)
-        ! grep -r "base64_decode" --include="*.php" . && echo "✓ No base64_decode" || echo "⚠ Found base64_decode"
-    
+        grep -r "defined( 'ABSPATH' )" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . > /dev/null && echo "✓ ABSPATH checks present" || (echo "✗ Missing ABSPATH checks" && exit 1)
+        ! grep -r "eval(" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . && echo "✓ No eval() usage" || (echo "⚠ Found eval() - security risk" && exit 1)
+        ! grep -r "base64_decode" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . && echo "✓ No base64_decode" || echo "⚠ Found base64_decode"
+
     - name: Check text domain usage
       run: |
         echo "Checking i18n..."
-        grep -r "__(" --include="*.php" . > /dev/null && echo "✓ Translation functions used" || echo "⚠ No translation functions found"
-        grep -r "oli-duplicate-post" --include="*.php" . > /dev/null && echo "✓ Text domain used in code" || echo "⚠ Text domain not used"
-    
+        grep -r "__(" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . > /dev/null && echo "✓ Translation functions used" || echo "⚠ No translation functions found"
+        grep -r "oli-duplicate-post" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . > /dev/null && echo "✓ Text domain used in code" || echo "⚠ Text domain not used"
+
     - name: Check for external calls
       run: |
         echo "Checking for external calls (should be none)..."
-        ! grep -r "curl_exec\|file_get_contents.*http\|wp_remote_get\|wp_remote_post" --include="*.php" . && echo "✓ No external calls found" || echo "⚠ Found external calls"
-    
+        if grep -R -E "curl_exec|file_get_contents\s*\(.*http|wp_remote_get|wp_remote_post" --include="*.php" --exclude-dir=tests --exclude-dir=vendor . ; then
+          echo "⚠ Found external calls"
+          exit 1
+        fi
+        echo "✓ No external calls found"
+
     - name: Validation summary
       run: echo "✓ Plugin is ready for WordPress Plugin Check (PCP)"
