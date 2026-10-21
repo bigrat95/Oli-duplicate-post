@@ -1,0 +1,256 @@
+# Copyright (C) 2026 Olivier Bigras
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Oli Duplicate Post 0.1.0\n"
+"Report-Msgid-Bugs-To: https://olivierbigras.com/\n"
+"POT-Creation-Date: 2026-10-19 17:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+
+#: includes/class-oli-dp-settings.php:39
+msgid " (Copy)"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:54
+msgid "Oli Duplicate Post Settings"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:55
+msgid "Duplicate Post"
+msgstr ""
+
+#: includes/class-oli-dp-duplicator.php:29
+msgid "Invalid post ID."
+msgstr ""
+
+#: includes/class-oli-dp-duplicator.php:35
+msgid "You do not have permission to duplicate this post."
+msgstr ""
+
+#: includes/class-oli-dp-permissions.php:92
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:48
+msgid "Clone &#8220;%s&#8221;"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:49
+msgid "Clone"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:56
+msgid "New Draft of &#8220;%s&#8221;"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:57
+msgid "New Draft"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:68
+msgid "Rewrite & Republish &#8220;%s&#8221;"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:69
+msgid "Rewrite & Republish"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:77
+msgid "Edit Rewrite Copy of &#8220;%s&#8221;"
+msgstr ""
+
+#: admin/class-oli-dp-post-list.php:78
+msgid "Edit Rewrite Copy"
+msgstr ""
+
+#: admin/class-oli-dp-bulk-actions.php:58
+msgid "%d post duplicated."
+msgid_plural "%d posts duplicated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-oli-dp-admin-bar.php:50
+msgid "Duplicate This"
+msgstr ""
+
+#: admin/class-oli-dp-meta-box.php:38
+msgid "You do not have permission to duplicate this post."
+msgstr ""
+
+#: includes/class-oli-dp-hooks.php:22
+msgid "Security check failed."
+msgstr ""
+
+#: includes/class-oli-dp-hooks.php:35
+msgid "Invalid action."
+msgstr ""
+
+#: includes/class-oli-dp-hooks.php:57
+msgid "Invalid request."
+msgstr ""
+
+#: includes/class-oli-dp-rewrite-republish.php:121
+msgid "This is a <strong>Rewrite & Republish</strong> copy of \"%1$s\". When you publish this post, it will replace the original. <a href=\"%2$s\">Edit original</a> | <a href=\"%3$s\" target=\"_blank\">View original</a>"
+msgstr ""
+
+#: includes/class-oli-dp-rewrite-republish.php:146
+msgid "Rewrite & Republish"
+msgstr ""
+
+#: includes/class-oli-dp-rewrite-republish.php:152
+msgid "Original (being rewritten)"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:72
+msgid "What to Copy"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:79
+msgid "Title Settings"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:86
+msgid "Advanced Settings"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:93
+msgid "Post Types & Permissions"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:100
+msgid "UI Locations"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:112
+msgid "Title"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:113
+msgid "Date"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:114
+msgid "Status"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:115
+msgid "Slug"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:116
+msgid "Excerpt"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:117
+msgid "Content"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:118
+msgid "Template"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:119
+msgid "Format"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:120
+msgid "Author"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:121
+msgid "Password"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:122
+msgid "Menu Order"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:123
+msgid "Attachments"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:124
+msgid "Children"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:125
+msgid "Comments"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:139
+msgid "Title Prefix"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:149
+msgid "Title Suffix"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:159
+msgid "Excluded Meta Fields"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:165
+msgid "Comma-separated list of meta keys to exclude. Supports wildcards (*)."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:169
+msgid "Excluded Taxonomies"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:175
+msgid "Comma-separated list of taxonomies to exclude."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:180
+msgid "Enabled Post Types"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:188
+msgid "Allowed Roles"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:197
+msgid "Show in Row Actions"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:198
+msgid "Show in Admin Bar"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:199
+msgid "Show in Edit Screen"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:200
+msgid "Show Bulk Actions"
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:220
+msgid "Choose which elements to copy when duplicating a post."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:227
+msgid "Configure how the title should be modified for duplicated posts."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:234
+msgid "Advanced settings for meta fields and taxonomies."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:241
+msgid "Configure which post types can be duplicated and which user roles have access."
+msgstr ""
+
+#: includes/class-oli-dp-settings.php:248
+msgid "Choose where duplicate links should appear in the WordPress admin."
+msgstr ""
+
+#: includes/class-oli-dp-admin.php:52
+msgid "Settings"
+msgstr ""

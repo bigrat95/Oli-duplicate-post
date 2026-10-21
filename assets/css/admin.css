@@ -1,0 +1,126 @@
+/**
+ * Admin styles for Oli Duplicate Post.
+ *
+ * @package Oli_Duplicate_Post
+ */
+
+.oli-dp-meta-box .oli-dp-button-full {
+	width: 100%;
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.oli-dp-meta-box .oli-dp-button-full:last-child {
+	margin-bottom: 0;
+}
+
+.oli-dp-settings-option {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.oli-dp-schedule-list {
+	margin-left: 20px;
+}
+
+.oli-dp-republish-icon {
+	color: #d63638;
+}
+
+.oli-dp-republish-note {
+	margin: 5px 0 0 0;
+}
+
+.oli-dp-quick-copy {
+	margin: 10px 0;
+}
+
+.oli-dp-block-panel {
+	padding: 0 16px 16px;
+}
+
+.oli-dp-block-button {
+	width: 100%;
+	margin-bottom: 8px;
+	justify-content: center;
+}
+
+.oli-dp-block-button:last-child {
+	margin-bottom: 0;
+}
+
+.oli-dp-comparison-wrap {
+	margin-top: 20px;
+}
+
+.oli-dp-comparison-header {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	padding: 15px 20px;
+	margin-bottom: 20px;
+}
+
+.oli-dp-comparison-container {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	margin-bottom: 20px;
+}
+
+.oli-dp-comparison-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.oli-dp-comparison-table th,
+.oli-dp-comparison-table td {
+	padding: 12px;
+	border: 1px solid #ddd;
+	text-align: left;
+	vertical-align: top;
+}
+
+.oli-dp-comparison-table th {
+	background-color: #f6f7f7;
+	font-weight: 600;
+}
+
+.oli-dp-comparison-table td {
+	border-top: 1px solid #e0e0e0;
+}
+
+.oli-dp-comparison-table .oli-dp-col-field {
+	width: 20%;
+}
+
+.oli-dp-comparison-table .oli-dp-col-original,
+.oli-dp-comparison-table .oli-dp-col-rewrite {
+	width: 40%;
+}
+
+.oli-dp-comparison-table tr.oli-dp-diff td:nth-child(2),
+.oli-dp-comparison-table tr.oli-dp-diff td:nth-child(3) {
+	background: #fff8dc;
+}
+
+.oli-dp-comparison-table .oli-dp-field-label {
+	font-weight: 600;
+}
+
+.oli-dp-comparison-table .oli-dp-content-preview {
+	max-height: 200px;
+	overflow-y: auto;
+	background: #f9f9f9;
+	padding: 10px;
+	border: 1px solid #ddd;
+	font-family: monospace;
+	font-size: 12px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+.oli-dp-comparison-actions {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	padding: 15px 20px;
+}
