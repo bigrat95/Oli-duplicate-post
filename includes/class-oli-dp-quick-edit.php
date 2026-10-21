@@ -19,16 +19,17 @@ class Oli_DP_Quick_Edit {
 	 * Initialize the class.
 	 */
 	public static function init() {
-		add_action( 'admin_footer-edit.php', array( __CLASS__, 'add_quick_edit_link' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'quick_edit_custom_box', array( __CLASS__, 'render_quick_edit_custom_box' ), 10, 2 );
 	}
 
 	/**
-	 * Add JavaScript to add duplicate link to quick edit.
+	 * Enqueue Quick Edit script on list tables.
+	 *
+	 * @param string $hook Current admin page hook.
 	 */
-	public static function add_quick_edit_link() {
-		$screen = get_current_screen();
-		if ( ! $screen || 'edit' !== $screen->base ) {
+	public static function enqueue_scripts( $hook ) {
+		if ( 'edit.php' !== $hook ) {
 			return;
 		}
 
@@ -37,34 +38,30 @@ class Oli_DP_Quick_Edit {
 			return;
 		}
 
-		?>
-		<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			// Add "Copy to new draft" link in quick edit
-			$('.editinline').on('click', function() {
-				var postId = $(this).closest('tr').attr('id').replace('post-', '');
-				var postRow = $('#post-' + postId);
-				
-				// Get the duplicate URL from the row actions
-				var cloneLink = postRow.find('.oli_dp_clone a, .oli_dp_new_draft a').first().attr('href');
-				
-				if (cloneLink) {
-					// Wait for quick edit to open
-					setTimeout(function() {
-						var quickEditRow = $('#edit-' + postId);
-						if (quickEditRow.length && !quickEditRow.find('.oli-dp-quick-copy').length) {
-							var copyButton = $('<div class="oli-dp-quick-copy" style="margin: 10px 0;">' +
-								'<a href="' + cloneLink + '" class="button button-secondary">' +
-								'<?php echo esc_js( __( 'Copy to New Draft', 'oli-duplicate-post' ) ); ?>' +
-								'</a></div>');
-							quickEditRow.find('.inline-edit-col-left').append(copyButton);
-						}
-					}, 50);
-				}
-			});
-		});
-		</script>
-		<?php
+		wp_enqueue_style(
+			'oli-dp-admin',
+			OLI_DP_PLUGIN_URL . 'assets/css/admin.css',
+			array(),
+			OLI_DP_VERSION
+		);
+
+		wp_enqueue_script(
+			'oli-dp-quick-edit',
+			OLI_DP_PLUGIN_URL . 'assets/js/quick-edit.js',
+			array( 'jquery' ),
+			OLI_DP_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'oli-dp-quick-edit',
+			'oliDpQuickEdit',
+			array(
+				'copyToNewDraft' => __( 'Copy to New Draft', 'oli-duplicate-post' ),
+			)
+		);
+
+		wp_set_script_translations( 'oli-dp-quick-edit', 'oli-duplicate-post', OLI_DP_PLUGIN_DIR . 'languages' );
 	}
 
 	/**

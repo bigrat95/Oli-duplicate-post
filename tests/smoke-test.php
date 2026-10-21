@@ -85,7 +85,7 @@ if ( file_exists( $plugin_root . '/oli-duplicate-post.php' ) ) {
 	oli_dp_test_fail( 'Main plugin file not found' );
 }
 
-$required_dirs = array( 'includes', 'admin', 'languages', 'tests', '.github/workflows' );
+$required_dirs = array( 'includes', 'admin', 'assets', 'assets/js', 'assets/css', 'languages', 'tests', '.github/workflows' );
 foreach ( $required_dirs as $dir ) {
 	++$total_tests;
 	if ( is_dir( $plugin_root . '/' . $dir ) ) {
@@ -109,6 +109,9 @@ $required_files = array(
 	'admin/class-oli-dp-bulk-actions.php',
 	'admin/class-oli-dp-admin-bar.php',
 	'admin/class-oli-dp-meta-box.php',
+	'assets/js/block-editor.js',
+	'assets/js/quick-edit.js',
+	'assets/css/admin.css',
 	'phpcs.xml.dist',
 	'composer.json',
 );
@@ -167,6 +170,14 @@ if ( file_exists( $readme_path ) ) {
 	} else {
 		oli_dp_test_fail( 'readme.txt GitHub URL should use github.com/olivierbigras' );
 	}
+
+	++$total_tests;
+	if ( false !== strpos( $readme_content, '== External services ==' ) ) {
+		oli_dp_test_pass( 'readme.txt has External services section' );
+		++$passed_tests;
+	} else {
+		oli_dp_test_fail( 'readme.txt missing External services section' );
+	}
 } else {
 	oli_dp_test_fail( 'readme.txt not found' );
 }
@@ -216,11 +227,11 @@ if ( $version_in_main && $version_in_readme && $main_version[1] === $readme_vers
 }
 
 ++$total_tests;
-if ( preg_match( '/0\.1\.1/', $main_file ) ) {
-	oli_dp_test_pass( 'Plugin version is 0.1.1' );
+if ( preg_match( '/0\.1\.2/', $main_file ) ) {
+	oli_dp_test_pass( 'Plugin version is 0.1.2' );
 	++$passed_tests;
 } else {
-	oli_dp_test_fail( 'Plugin version is not 0.1.1' );
+	oli_dp_test_fail( 'Plugin version is not 0.1.2' );
 }
 
 oli_dp_test_section( 'PHP Syntax Tests' );
@@ -269,6 +280,40 @@ if ( preg_match( '/wp_verify_nonce|wp_create_nonce/', $plugin_php ) ) {
 	oli_dp_test_fail( 'Nonce functions not found' );
 }
 
+oli_dp_test_section( 'Asset Enqueue Tests' );
+
+$plugin_js  = '';
+$js_files   = glob( $plugin_root . '/assets/js/*.js' );
+if ( is_array( $js_files ) ) {
+	foreach ( $js_files as $js_file ) {
+		$plugin_js .= file_get_contents( $js_file ) . "\n";
+	}
+}
+
+++$total_tests;
+if ( false === strpos( $plugin_php, '<script' ) && false === strpos( $plugin_php, '<style' ) ) {
+	oli_dp_test_pass( 'No inline <script> or <style> tags in plugin PHP' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Inline <script> or <style> tags still present in plugin PHP' );
+}
+
+++$total_tests;
+if ( false === strpos( $plugin_php, 'wp_add_inline_script' ) && false === strpos( $plugin_php, 'wp_add_inline_style' ) ) {
+	oli_dp_test_pass( 'No wp_add_inline_script/style usage' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'wp_add_inline_script or wp_add_inline_style still used' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'wp_enqueue_script' ) && false !== strpos( $plugin_php, 'wp_localize_script' ) && false !== strpos( $plugin_php, 'wp_enqueue_style' ) ) {
+	oli_dp_test_pass( 'Scripts and styles are enqueued and localized' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Missing wp_enqueue_script, wp_localize_script, or wp_enqueue_style' );
+}
+
 oli_dp_test_section( 'Feature Parity Tests' );
 
 ++$total_tests;
@@ -280,7 +325,7 @@ if ( false !== strpos( $plugin_php, 'oli-dp-compare' ) ) {
 }
 
 ++$total_tests;
-if ( false !== strpos( $plugin_php, 'PluginMoreMenuItem' ) ) {
+if ( false !== strpos( $plugin_js, 'PluginMoreMenuItem' ) ) {
 	oli_dp_test_pass( 'Block editor toolbar/menu items present' );
 	++$passed_tests;
 } else {
@@ -288,7 +333,7 @@ if ( false !== strpos( $plugin_php, 'PluginMoreMenuItem' ) ) {
 }
 
 ++$total_tests;
-if ( false !== strpos( $plugin_php, 'Copy to New Draft' ) ) {
+if ( false !== strpos( $plugin_php, 'Copy to New Draft' ) || false !== strpos( $plugin_js, 'Copy to New Draft' ) ) {
 	oli_dp_test_pass( 'Quick edit / Copy to New Draft link present' );
 	++$passed_tests;
 } else {

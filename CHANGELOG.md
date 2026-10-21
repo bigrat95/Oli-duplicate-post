@@ -5,6 +5,18 @@ All notable changes to Oli Duplicate Post will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-10-21
+
+### Changed
+- Extracted the block editor sidebar/Options-menu script to `assets/js/block-editor.js` and enqueue it with `wp_enqueue_script` + `wp_localize_script`
+- Extracted the Quick Edit "Copy to New Draft" script to `assets/js/quick-edit.js`
+- Moved admin and comparison styles to `assets/css/admin.css` (no inline `<style>` or `wp_add_inline_style`)
+
+### Fixed
+- Escape comparison featured-image markup with `wp_kses_post`
+- Require `current_user_can` / `Oli_DP_Permissions::can_duplicate` on comparison and duplicate admin actions
+- Document in `readme.txt` that the plugin does not call external services
+
 ## [0.1.1] - 2026-10-19
 
 ### Added
@@ -66,5 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Capability checks for all operations
 - No external calls or tracking
 
+[0.1.2]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.2
 [0.1.1]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.1
 [0.1.0]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.0

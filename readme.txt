@@ -4,7 +4,7 @@ Tags: duplicate, clone, copy, post, page
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,7 +131,18 @@ The plugin copies meta fields, taxonomies, featured images, and optionally attac
 6. Settings page - Post types & permissions
 7. Rewrite & Republish notice
 
+== External services ==
+
+This plugin does not call any external service. Clone, New Draft, and Rewrite & Republish run entirely on your WordPress site. No visitor or editor data is sent to olivierbigras.com, PayPal, Google, Cloudflare Turnstile, Carto, Leaflet, Google Sheets, Google Fonts, Adobe Typekit, or any other third party.
+
 == Changelog ==
+
+= 0.1.2 - 2026-10-21 =
+* Moved block editor and Quick Edit JavaScript from inline scripts into enqueued files
+* Moved admin CSS from inline styles into an enqueued stylesheet
+* Localized editor URLs and labels with wp_localize_script
+* Escaped comparison featured-image HTML with wp_kses_post
+* Added current_user_can checks on comparison and duplicate admin actions
 
 = 0.1.1 - 2026-10-19 =
 * Added side-by-side comparison screen for Rewrite & Republish
@@ -158,6 +169,9 @@ The plugin copies meta fields, taxonomies, featured images, and optionally attac
 * Block editor support
 
 == Upgrade Notice ==
+
+= 0.1.2 =
+Moves remaining inline JavaScript and CSS into enqueued files for WordPress.org Plugin Check.
 
 = 0.1.1 =
 Adds comparison screen, enhanced block editor integration, quick edit support, and improved admin notices.

@@ -46,7 +46,11 @@ class Oli_DP_Rewrite_Republish {
 			return;
 		}
 
-		// Verify nonce if present.
+		if ( is_user_logged_in() && ( ! current_user_can( 'edit_post', $post->ID ) || ! current_user_can( 'edit_post', $original_post_id ) ) ) {
+			return;
+		}
+
+		// Verify nonce if present (publish form). Cron-scheduled transitions have no nonce.
 		if ( isset( $_POST['oli_dp_rewrite_nonce'] ) ) {
 			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['oli_dp_rewrite_nonce'] ) ), 'oli_dp_rewrite_publish' ) ) {
 				return;
@@ -247,7 +251,6 @@ class Oli_DP_Rewrite_Republish {
 				);
 				?>
 			</p>
-			<?php wp_nonce_field( 'oli_dp_rewrite_publish', 'oli_dp_rewrite_nonce' ); ?>
 		</div>
 		<?php
 	}
@@ -329,7 +332,7 @@ class Oli_DP_Rewrite_Republish {
 			<p>
 				<strong><?php esc_html_e( 'Actions:', 'oli-duplicate-post' ); ?></strong>
 			</p>
-			<ul style="margin-left: 20px;">
+			<ul class="oli-dp-schedule-list">
 				<li><?php esc_html_e( 'Publish Now → Replaces original immediately', 'oli-duplicate-post' ); ?></li>
 				<li><?php esc_html_e( 'Schedule → Replaces original at scheduled time', 'oli-duplicate-post' ); ?></li>
 				<li><?php esc_html_e( 'Save Draft → Keep editing without publishing', 'oli-duplicate-post' ); ?></li>
@@ -355,11 +358,12 @@ class Oli_DP_Rewrite_Republish {
 
 		?>
 		<div class="misc-pub-section oli-dp-republish-info">
-			<span class="dashicons dashicons-update" style="color: #d63638;"></span>
+			<span class="dashicons dashicons-update oli-dp-republish-icon"></span>
 			<strong><?php esc_html_e( 'Rewrite & Republish Mode', 'oli-duplicate-post' ); ?></strong>
-			<p class="description" style="margin: 5px 0 0 0;">
+			<p class="description oli-dp-republish-note">
 				<?php esc_html_e( 'Publishing will replace the original post.', 'oli-duplicate-post' ); ?>
 			</p>
+			<?php wp_nonce_field( 'oli_dp_rewrite_publish', 'oli_dp_rewrite_nonce' ); ?>
 		</div>
 		<?php
 	}

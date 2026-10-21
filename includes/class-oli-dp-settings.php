@@ -347,7 +347,7 @@ class Oli_DP_Settings {
 		foreach ( $post_types as $post_type ) {
 			$checked = in_array( $post_type->name, $enabled_post_types, true );
 			?>
-			<label style="display: block; margin-bottom: 5px;">
+			<label class="oli-dp-settings-option">
 				<input type="checkbox" name="oli_dp_settings[enabled_post_types][]" value="<?php echo esc_attr( $post_type->name ); ?>" <?php checked( $checked ); ?> />
 				<?php echo esc_html( $post_type->label ); ?>
 			</label>
@@ -367,7 +367,7 @@ class Oli_DP_Settings {
 		foreach ( $roles as $role_key => $role ) {
 			$checked = in_array( $role_key, $allowed_roles, true );
 			?>
-			<label style="display: block; margin-bottom: 5px;">
+			<label class="oli-dp-settings-option">
 				<input type="checkbox" name="oli_dp_settings[allowed_roles][]" value="<?php echo esc_attr( $role_key ); ?>" <?php checked( $checked ); ?> />
 				<?php echo esc_html( $role['name'] ); ?>
 			</label>

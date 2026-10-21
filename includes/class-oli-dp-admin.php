@@ -25,18 +25,18 @@ class Oli_DP_Admin {
 
 	/**
 	 * Enqueue admin scripts and styles.
+	 *
+	 * @param string $hook Current admin page hook.
 	 */
-	public static function enqueue_scripts() {
-		// Add inline CSS for admin notices and UI.
-		$custom_css = '
-			.oli-dp-comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-			.oli-dp-comparison-table th,
-			.oli-dp-comparison-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-			.oli-dp-comparison-table th { background-color: #f5f5f5; font-weight: 600; }
-			.oli-dp-comparison-diff { background-color: #fff8dc; }
-		';
+	public static function enqueue_scripts( $hook ) {
+		unset( $hook );
 
-		wp_add_inline_style( 'wp-admin', $custom_css );
+		wp_enqueue_style(
+			'oli-dp-admin',
+			OLI_DP_PLUGIN_URL . 'assets/css/admin.css',
+			array(),
+			OLI_DP_VERSION
+		);
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Plugin Name: Oli Duplicate Post
  * Plugin URI: https://olivierbigras.com/oli-duplicate-post/
  * Description: Clone posts, pages, custom post types with Clone, New Draft, and Rewrite & Republish features.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: Olivier Bigras
  * Author URI: https://olivierbigras.com/
  * License: GPL v2 or later
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'OLI_DP_VERSION', '0.1.1' );
+define( 'OLI_DP_VERSION', '0.1.2' );
 define( 'OLI_DP_PLUGIN_FILE', __FILE__ );
 define( 'OLI_DP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OLI_DP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

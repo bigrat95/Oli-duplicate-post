@@ -38,6 +38,10 @@ class Oli_DP_Hooks {
 				wp_die( esc_html__( 'Security check failed.', 'oli-duplicate-post' ) );
 			}
 
+			if ( ! Oli_DP_Permissions::can_duplicate( $post_id ) ) {
+				wp_die( esc_html__( 'You do not have permission to duplicate this post.', 'oli-duplicate-post' ) );
+			}
+
 			$mode_map = array(
 				'clone'             => 'clone',
 				'new_draft'         => 'new_draft',
@@ -81,6 +85,10 @@ class Oli_DP_Hooks {
 
 		if ( ! wp_verify_nonce( $nonce, 'oli_dp_duplicate_' . $post_id ) ) {
 			wp_die( esc_html__( 'Security check failed.', 'oli-duplicate-post' ) );
+		}
+
+		if ( ! Oli_DP_Permissions::can_duplicate( $post_id ) ) {
+			wp_die( esc_html__( 'You do not have permission to duplicate this post.', 'oli-duplicate-post' ) );
 		}
 
 		$mode = isset( $_POST['mode'] ) ? sanitize_text_field( wp_unslash( $_POST['mode'] ) ) : 'clone';
