@@ -28,7 +28,7 @@ class Oli_DP_Meta_Box {
 	 */
 	public static function add_meta_box() {
 		// Check if edit screen should show duplicate box.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		if ( empty( $settings['show_edit_screen'] ) ) {
 			return;
@@ -61,35 +61,45 @@ class Oli_DP_Meta_Box {
 
 		$clone_url     = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'clone' );
 		$new_draft_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
+		/* translators: %s: post title */
+		$clone_label = sprintf( __( 'Clone &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title );
+		/* translators: %s: post title */
+		$draft_label = sprintf( __( 'New Draft of &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title );
 
 		?>
 		<div class="oli-dp-meta-box">
 			<p>
-				<a href="<?php echo esc_url( $clone_url ); ?>" class="button button-secondary button-large oli-dp-button-full">
+				<a href="<?php echo esc_url( $clone_url ); ?>" class="button button-secondary button-large oli-dp-button-full" aria-label="<?php echo esc_attr( $clone_label ); ?>">
 					<?php esc_html_e( 'Clone', 'oli-duplicate-post' ); ?>
 				</a>
 			</p>
 			<p>
-				<a href="<?php echo esc_url( $new_draft_url ); ?>" class="button button-secondary button-large oli-dp-button-full">
+				<a href="<?php echo esc_url( $new_draft_url ); ?>" class="button button-secondary button-large oli-dp-button-full" aria-label="<?php echo esc_attr( $draft_label ); ?>">
 					<?php esc_html_e( 'New Draft', 'oli-duplicate-post' ); ?>
 				</a>
 			</p>
-			<?php if ( 'publish' === $post->post_status ) : ?>
+			<?php if ( Oli_DP_Settings::is_rewrite_enabled() && 'publish' === $post->post_status ) : ?>
 				<?php
 				$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
 
 				if ( ! $existing_rewrite ) {
 					$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
+					/* translators: %s: post title */
+					$rewrite_label = sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title );
 					?>
 					<p>
-						<a href="<?php echo esc_url( $rewrite_url ); ?>" class="button button-secondary button-large oli-dp-button-full">
+						<a href="<?php echo esc_url( $rewrite_url ); ?>" class="button button-secondary button-large oli-dp-button-full" aria-label="<?php echo esc_attr( $rewrite_label ); ?>">
 							<?php esc_html_e( 'Rewrite & Republish', 'oli-duplicate-post' ); ?>
 						</a>
 					</p>
 				<?php } else { ?>
-					<?php $edit_url = get_edit_post_link( $existing_rewrite ); ?>
+					<?php
+					$edit_url = get_edit_post_link( $existing_rewrite );
+					/* translators: %s: post title */
+					$edit_label = sprintf( __( 'Edit Rewrite Copy of &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title );
+					?>
 					<p>
-						<a href="<?php echo esc_url( $edit_url ); ?>" class="button button-primary button-large oli-dp-button-full">
+						<a href="<?php echo esc_url( $edit_url ); ?>" class="button button-primary button-large oli-dp-button-full" aria-label="<?php echo esc_attr( $edit_label ); ?>">
 							<?php esc_html_e( 'Edit Rewrite Copy', 'oli-duplicate-post' ); ?>
 						</a>
 					</p>
@@ -104,7 +114,7 @@ class Oli_DP_Meta_Box {
 	 */
 	public static function enqueue_block_editor_assets() {
 		// Check if edit screen should show duplicate box.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		if ( empty( $settings['show_edit_screen'] ) ) {
 			return;
@@ -120,7 +130,7 @@ class Oli_DP_Meta_Box {
 		$new_draft_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'new_draft' );
 		$rewrite_url   = '';
 
-		if ( 'publish' === $post->post_status ) {
+		if ( Oli_DP_Settings::is_rewrite_enabled( $settings ) && 'publish' === $post->post_status ) {
 			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
 			if ( ! $existing_rewrite ) {
 				$rewrite_url = Oli_DP_Hooks::get_duplicate_url( $post->ID, 'rewrite_republish' );
@@ -155,6 +165,12 @@ class Oli_DP_Meta_Box {
 					'newDraft'         => __( 'New Draft', 'oli-duplicate-post' ),
 					'copyToNewDraft'   => __( 'Copy to New Draft', 'oli-duplicate-post' ),
 					'rewriteRepublish' => __( 'Rewrite & Republish', 'oli-duplicate-post' ),
+					/* translators: %s: post title */
+					'cloneLabel'       => sprintf( __( 'Clone &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+					/* translators: %s: post title */
+					'newDraftLabel'    => sprintf( __( 'New Draft of &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+					/* translators: %s: post title */
+					'rewriteLabel'     => sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
 				),
 			)
 		);

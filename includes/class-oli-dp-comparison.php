@@ -72,7 +72,7 @@ class Oli_DP_Comparison {
 
 		?>
 		<div class="wrap oli-dp-comparison-wrap">
-			<h1><?php esc_html_e( 'Compare Changes - Rewrite & Republish', 'oli-duplicate-post' ); ?></h1>
+			<h1><?php esc_html_e( 'Compare changes', 'oli-duplicate-post' ); ?></h1>
 
 			<div class="oli-dp-comparison-header">
 				<p class="description">
@@ -98,17 +98,17 @@ class Oli_DP_Comparison {
 				<table class="oli-dp-comparison-table widefat">
 					<thead>
 						<tr>
-							<th class="oli-dp-col-field"><?php esc_html_e( 'Field', 'oli-duplicate-post' ); ?></th>
-							<th class="oli-dp-col-original"><?php esc_html_e( 'Original', 'oli-duplicate-post' ); ?></th>
-							<th class="oli-dp-col-rewrite"><?php esc_html_e( 'Rewrite', 'oli-duplicate-post' ); ?></th>
+							<th scope="col" class="oli-dp-col-field"><?php esc_html_e( 'Field', 'oli-duplicate-post' ); ?></th>
+							<th scope="col" class="oli-dp-col-original"><?php esc_html_e( 'Original', 'oli-duplicate-post' ); ?></th>
+							<th scope="col" class="oli-dp-col-copy"><?php esc_html_e( 'Copy', 'oli-duplicate-post' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php self::render_comparison_row( 'Title', $original->post_title, $rewrite->post_title ); ?>
-						<?php self::render_comparison_row( 'Status', $original->post_status, $rewrite->post_status ); ?>
-						<?php self::render_comparison_row( 'Date', $original->post_date, $rewrite->post_date ); ?>
-						<?php self::render_comparison_row( 'Excerpt', $original->post_excerpt, $rewrite->post_excerpt ); ?>
-						<?php self::render_comparison_row( 'Content', $original->post_content, $rewrite->post_content, true ); ?>
+						<?php self::render_comparison_row( __( 'Title', 'oli-duplicate-post' ), $original->post_title, $rewrite->post_title ); ?>
+						<?php self::render_comparison_row( __( 'Status', 'oli-duplicate-post' ), $original->post_status, $rewrite->post_status ); ?>
+						<?php self::render_comparison_row( __( 'Date', 'oli-duplicate-post' ), $original->post_date, $rewrite->post_date ); ?>
+						<?php self::render_comparison_row( __( 'Excerpt', 'oli-duplicate-post' ), $original->post_excerpt, $rewrite->post_excerpt ); ?>
+						<?php self::render_comparison_row( __( 'Content', 'oli-duplicate-post' ), $original->post_content, $rewrite->post_content, true ); ?>
 						
 						<?php
 						// Featured image.
@@ -117,7 +117,7 @@ class Oli_DP_Comparison {
 						if ( $original_thumb || $rewrite_thumb ) {
 							$original_img = $original_thumb ? wp_get_attachment_image( $original_thumb, 'thumbnail' ) : __( 'No image', 'oli-duplicate-post' );
 							$rewrite_img  = $rewrite_thumb ? wp_get_attachment_image( $rewrite_thumb, 'thumbnail' ) : __( 'No image', 'oli-duplicate-post' );
-							self::render_comparison_row( 'Featured Image', $original_img, $rewrite_img, false, true );
+							self::render_comparison_row( __( 'Featured image', 'oli-duplicate-post' ), $original_img, $rewrite_img, false, true );
 						}
 
 						// Categories/Tags.
@@ -169,7 +169,12 @@ class Oli_DP_Comparison {
 
 		?>
 		<tr class="<?php echo esc_attr( $row_class ); ?>">
-			<td class="oli-dp-field-label"><?php echo esc_html( $label ); ?></td>
+			<th scope="row" class="oli-dp-field-label">
+				<?php echo esc_html( $label ); ?>
+				<?php if ( $is_different ) : ?>
+					<span class="oli-dp-changed"><?php esc_html_e( 'Changed', 'oli-duplicate-post' ); ?></span>
+				<?php endif; ?>
+			</th>
 			<td>
 				<?php
 				if ( $is_html ) {

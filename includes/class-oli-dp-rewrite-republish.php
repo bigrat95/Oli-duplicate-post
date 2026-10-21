@@ -94,15 +94,14 @@ class Oli_DP_Rewrite_Republish {
 		}
 
 		// Copy meta data.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		// Get all meta from rewrite post.
 		$rewrite_meta = get_post_meta( $rewrite_post_id );
 
 		// Get excluded meta keys.
-		$excluded_meta    = isset( $settings['excluded_meta'] ) ? $settings['excluded_meta'] : '';
-		$excluded_keys    = array_map( 'trim', explode( ',', $excluded_meta ) );
-		$default_excluded = array( '_edit_lock', '_edit_last', '_oli_dp_original_post' );
+		$excluded_keys    = Oli_DP_Settings::get_excluded_meta_keys( $settings );
+		$default_excluded = array( '_oli_dp_original_post', '_oli_dp_rewrite_copy' );
 		$excluded_keys    = array_merge( $excluded_keys, $default_excluded );
 
 		foreach ( $rewrite_meta as $meta_key => $meta_values ) {
@@ -226,8 +225,6 @@ class Oli_DP_Rewrite_Republish {
 			return;
 		}
 
-		$edit_link    = get_edit_post_link( $original_post_id );
-		$view_link    = get_permalink( $original_post_id );
 		$compare_link = add_query_arg(
 			array(
 				'page'     => 'oli-dp-compare',
@@ -236,18 +233,20 @@ class Oli_DP_Rewrite_Republish {
 			),
 			admin_url( 'admin.php' )
 		);
-
 		?>
 		<div class="notice notice-info">
 			<p>
 				<?php
 				printf(
-					/* translators: 1: Original post title, 2: Edit link, 3: View link, 4: Compare link */
-					wp_kses_post( __( 'This is a <strong>Rewrite & Republish</strong> copy of "%1$s". When you publish this post, it will replace the original. <a href="%2$s">Edit original</a> | <a href="%3$s" target="_blank">View original</a> | <a href="%4$s">Compare changes</a>', 'oli-duplicate-post' ) ),
-					esc_html( $original_post->post_title ),
-					esc_url( $edit_link ),
-					esc_url( $view_link ),
-					esc_url( $compare_link )
+					/* translators: %s: original post title */
+					esc_html__( 'You are editing a copy of %s. Publish to replace the original.', 'oli-duplicate-post' ),
+					esc_html( $original_post->post_title )
+				);
+				echo ' ';
+				printf(
+					'<a href="%s">%s</a>',
+					esc_url( $compare_link ),
+					esc_html__( 'Compare', 'oli-duplicate-post' )
 				);
 				?>
 			</p>

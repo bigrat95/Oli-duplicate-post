@@ -4,7 +4,7 @@ Tags: duplicate, clone, copy, post, page
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,13 +38,10 @@ Oli Duplicate Post makes it easy to duplicate posts, pages, and custom post type
   * Comments (optional)
   * Full WooCommerce product support
 
-* **Advanced Settings:**
-  * Choose what to copy for each duplication
-  * Exclude specific meta fields (with wildcard support)
-  * Exclude specific taxonomies
-  * Enable/disable for specific post types
-  * Restrict access by user role
-  * Customize UI locations
+* **Settings (Settings > Duplicate Post):**
+  * Where to duplicate: public content types, roles that can edit posts, and Rewrite & Republish
+  * The copy: title prefix/suffix with a live preview, and draft or same-status copies
+  * Advanced copied elements, excluded taxonomies, excluded meta (one key per line, `*` wildcards), and where copy links appear
 
 * **Developer Friendly:**
   * Template tag: `oli_dp_duplicate_post()`
@@ -127,15 +124,24 @@ The plugin copies meta fields, taxonomies, featured images, and optionally attac
 2. Bulk actions for multiple posts
 3. Admin bar menu
 4. Edit screen meta box
-5. Settings page - What to copy
-6. Settings page - Post types & permissions
-7. Rewrite & Republish notice
+5. Settings page - Where to duplicate
+6. Settings page - The copy
+7. Settings page - Advanced copied elements
+8. Rewrite & Republish notice
 
 == External services ==
 
 This plugin does not call any external service. Clone, New Draft, and Rewrite & Republish run entirely on your WordPress site. No visitor or editor data is sent to olivierbigras.com, PayPal, Google, Cloudflare Turnstile, Carto, Leaflet, Google Sheets, Google Fonts, Adobe Typekit, or any other third party.
 
 == Changelog ==
+
+= 0.2.0 - 2026-10-21 =
+* Reorganized Settings > Duplicate Post into Where to duplicate, The copy, and a collapsed Advanced section
+* Added enable_rewrite, live title preview, featured-image copy control, and draft vs same-status radios
+* Soft-migrated existing option keys (empty suffix, newline meta keys, taxonomy checkboxes)
+* Updated success, error, and rewrite notices, plus comparison Original/Copy headers
+* Added fieldset/legend groups, aria-labels on Duplicate links, and sentence-case section titles
+* Excluded development files from the WordPress.org ZIP via .distignore and .gitattributes
 
 = 0.1.2 - 2026-10-21 =
 * Moved block editor and Quick Edit JavaScript from inline scripts into enqueued files
@@ -169,6 +175,9 @@ This plugin does not call any external service. Clone, New Draft, and Rewrite & 
 * Block editor support
 
 == Upgrade Notice ==
+
+= 0.2.0 =
+Settings > Duplicate Post is reorganized. Existing options are kept and migrated softly.
 
 = 0.1.2 =
 Moves remaining inline JavaScript and CSS into enqueued files for WordPress.org Plugin Check.

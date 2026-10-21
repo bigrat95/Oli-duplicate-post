@@ -33,7 +33,7 @@ class Oli_DP_Quick_Edit {
 			return;
 		}
 
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 		if ( empty( $settings['show_row_actions'] ) ) {
 			return;
 		}

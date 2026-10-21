@@ -29,7 +29,7 @@ class Oli_DP_Admin_Bar {
 	 */
 	public static function add_admin_bar_items( $wp_admin_bar ) {
 		// Check if admin bar items should be shown.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		if ( empty( $settings['show_admin_bar'] ) ) {
 			return;
@@ -62,6 +62,10 @@ class Oli_DP_Admin_Bar {
 				'id'    => 'oli_dp_duplicate',
 				'title' => __( 'Duplicate This', 'oli-duplicate-post' ),
 				'href'  => '#',
+				'meta'  => array(
+					/* translators: %s: post title */
+					'aria-label' => sprintf( __( 'Duplicate &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+				),
 			)
 		);
 
@@ -73,6 +77,10 @@ class Oli_DP_Admin_Bar {
 				'id'     => 'oli_dp_clone',
 				'title'  => __( 'Clone', 'oli-duplicate-post' ),
 				'href'   => $clone_url,
+				'meta'   => array(
+					/* translators: %s: post title */
+					'aria-label' => sprintf( __( 'Clone &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+				),
 			)
 		);
 
@@ -84,11 +92,15 @@ class Oli_DP_Admin_Bar {
 				'id'     => 'oli_dp_new_draft',
 				'title'  => __( 'New Draft', 'oli-duplicate-post' ),
 				'href'   => $new_draft_url,
+				'meta'   => array(
+					/* translators: %s: post title */
+					'aria-label' => sprintf( __( 'New Draft of &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+				),
 			)
 		);
 
-		// Rewrite & Republish action (only for published posts).
-		if ( 'publish' === $post->post_status ) {
+		// Rewrite & Republish action (only for published posts, when enabled).
+		if ( Oli_DP_Settings::is_rewrite_enabled( $settings ) && 'publish' === $post->post_status ) {
 			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
 
 			if ( ! $existing_rewrite ) {
@@ -99,6 +111,10 @@ class Oli_DP_Admin_Bar {
 						'id'     => 'oli_dp_rewrite',
 						'title'  => __( 'Rewrite & Republish', 'oli-duplicate-post' ),
 						'href'   => $rewrite_url,
+						'meta'   => array(
+							/* translators: %s: post title */
+							'aria-label' => sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+						),
 					)
 				);
 			} else {
@@ -109,6 +125,10 @@ class Oli_DP_Admin_Bar {
 						'id'     => 'oli_dp_rewrite',
 						'title'  => __( 'Edit Rewrite Copy', 'oli-duplicate-post' ),
 						'href'   => $edit_url,
+						'meta'   => array(
+							/* translators: %s: post title */
+							'aria-label' => sprintf( __( 'Edit Rewrite Copy of &#8220;%s&#8221;', 'oli-duplicate-post' ), $post->post_title ),
+						),
 					)
 				);
 			}

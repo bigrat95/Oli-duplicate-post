@@ -14,9 +14,53 @@
 	margin-bottom: 0;
 }
 
+.oli-dp-settings-wrap .oli-dp-fieldset {
+	border: 1px solid #c3c4c7;
+	padding: 12px 16px 16px;
+	margin: 16px 0;
+	background: #fff;
+}
+
+.oli-dp-settings-wrap .oli-dp-fieldset legend {
+	padding: 0 6px;
+	font-weight: 600;
+}
+
 .oli-dp-settings-option {
 	display: block;
-	margin-bottom: 5px;
+	margin: 8px 0;
+}
+
+.oli-dp-option-help {
+	display: block;
+	margin-left: 1.5em;
+}
+
+.oli-dp-advanced {
+	margin: 24px 0;
+	padding: 0 16px 8px;
+	border: 1px solid #c3c4c7;
+	background: #fff;
+}
+
+.oli-dp-advanced > summary {
+	cursor: pointer;
+	font-weight: 600;
+	padding: 12px 0;
+}
+
+.oli-dp-title-preview {
+	margin-top: 12px;
+}
+
+.oli-dp-status-warning {
+	margin-top: 12px;
+	max-width: 42rem;
+}
+
+.oli-dp-always-excluded code {
+	display: inline-block;
+	margin: 0 6px 4px 0;
 }
 
 .oli-dp-schedule-list {
@@ -94,13 +138,26 @@
 }
 
 .oli-dp-comparison-table .oli-dp-col-original,
-.oli-dp-comparison-table .oli-dp-col-rewrite {
+.oli-dp-comparison-table .oli-dp-col-copy {
 	width: 40%;
 }
 
-.oli-dp-comparison-table tr.oli-dp-diff td:nth-child(2),
-.oli-dp-comparison-table tr.oli-dp-diff td:nth-child(3) {
+.oli-dp-comparison-table tr.oli-dp-diff th,
+.oli-dp-comparison-table tr.oli-dp-diff td {
 	background: #fff8dc;
+	border-left: 3px solid #8a6d3b;
+}
+
+.oli-dp-changed {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 0 6px;
+	border: 1px solid #8a6d3b;
+	background: #fff;
+	color: #1d2327;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 2px;
 }
 
 .oli-dp-comparison-table .oli-dp-field-label {

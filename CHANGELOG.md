@@ -5,6 +5,27 @@ All notable changes to Oli Duplicate Post will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-10-21
+
+### Added
+- Settings page reorganized into **Where to duplicate**, **The copy**, and a collapsed **Advanced** section
+- `enable_rewrite` setting to turn Rewrite & Republish off
+- Live title preview (`aria-live`) for prefix and suffix
+- Featured image (`copy_thumbnail`) among the copied elements
+- `.distignore` and `.gitattributes` `export-ignore` rules so development files stay out of the WordPress.org ZIP
+
+### Changed
+- Existing option keys are kept; stored values are soft-migrated (empty title suffix, newline meta keys, taxonomy checkboxes)
+- Default title suffix is stored empty and becomes a translated `(Copy)` at runtime, with the leading space added in code
+- Copy status is a radio: draft (recommended) or the same status as the original, with an inline warning
+- Excluded taxonomies are generated from `get_taxonomies()`; reserved meta keys are always excluded and shown read-only
+- Success notice is `Copy created: %s` with an Edit copy link; errors use `notice-error`
+- Rewrite banner is `You are editing a copy of %s. Publish to replace the original.` with a Compare link
+- Comparison screen uses Original and Copy headers, plus a Changed label so differences are not color-only
+- Duplicate links include an `aria-label` with the post title; settings groups use `fieldset`/`legend`
+- Section titles use sentence case
+- Default enabled types/roles stay post, page, administrator, and editor, and add product / shop_manager when WooCommerce is active
+
 ## [0.1.2] - 2026-10-21
 
 ### Changed
@@ -78,6 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Capability checks for all operations
 - No external calls or tracking
 
+[0.2.0]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.2.0
 [0.1.2]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.2
 [0.1.1]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.1
 [0.1.0]: https://github.com/olivierbigras/Oli-duplicate-post/releases/tag/0.1.0

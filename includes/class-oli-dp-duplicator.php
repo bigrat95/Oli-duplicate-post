@@ -35,8 +35,12 @@ class Oli_DP_Duplicator {
 			return new WP_Error( 'permission_denied', __( 'You do not have permission to duplicate this post.', 'oli-duplicate-post' ) );
 		}
 
+		if ( 'rewrite_republish' === $mode && ! Oli_DP_Settings::is_rewrite_enabled() ) {
+			return new WP_Error( 'rewrite_disabled', __( 'Rewrite & Republish is disabled.', 'oli-duplicate-post' ) );
+		}
+
 		// Get settings.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 		$settings = wp_parse_args( $args, $settings );
 
 		// Prepare post data.
@@ -60,15 +64,13 @@ class Oli_DP_Duplicator {
 		}
 
 		// Copy meta data.
-		if ( $settings['copy_content'] ) {
-			self::copy_post_meta( $post_id, $new_post_id, $settings );
-		}
+		self::copy_post_meta( $post_id, $new_post_id, $settings );
 
 		// Copy taxonomies.
 		self::copy_taxonomies( $post_id, $new_post_id, $settings );
 
 		// Copy featured image.
-		if ( has_post_thumbnail( $post_id ) ) {
+		if ( ! empty( $settings['copy_thumbnail'] ) && has_post_thumbnail( $post_id ) ) {
 			$thumbnail_id = get_post_thumbnail_id( $post_id );
 			set_post_thumbnail( $new_post_id, $thumbnail_id );
 		}
@@ -123,15 +125,8 @@ class Oli_DP_Duplicator {
 			'post_status' => 'draft',
 		);
 
-		// Title.
-		if ( $settings['copy_title'] ) {
-			$title                       = $post->post_title;
-			$prefix                      = $settings['title_prefix'] ?? '';
-			$suffix                      = $settings['title_suffix'] ?? '';
-			$new_post_data['post_title'] = $prefix . $title . $suffix;
-		} else {
-			$new_post_data['post_title'] = '';
-		}
+		// Title is always copied.
+		$new_post_data['post_title'] = Oli_DP_Settings::get_copy_title( $post->post_title, $settings );
 
 		// Content.
 		if ( $settings['copy_content'] ) {
@@ -199,12 +194,9 @@ class Oli_DP_Duplicator {
 	private static function copy_post_meta( $original_post_id, $new_post_id, $settings ) {
 		$post_meta = get_post_meta( $original_post_id );
 
-		// Get excluded meta keys.
-		$excluded_meta = isset( $settings['excluded_meta'] ) ? $settings['excluded_meta'] : '';
-		$excluded_keys = array_map( 'trim', explode( ',', $excluded_meta ) );
-
-		// Always exclude some internal keys.
-		$default_excluded = array( '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_old_date', '_thumbnail_id' );
+		// Get excluded meta keys (reserved keys plus user patterns).
+		$excluded_keys    = Oli_DP_Settings::get_excluded_meta_keys( $settings );
+		$default_excluded = array( '_thumbnail_id', '_oli_dp_original_post', '_oli_dp_rewrite_copy' );
 		$excluded_keys    = array_merge( $excluded_keys, $default_excluded );
 
 		foreach ( $post_meta as $meta_key => $meta_values ) {
@@ -273,8 +265,7 @@ class Oli_DP_Duplicator {
 		$taxonomies = get_object_taxonomies( $post->post_type );
 
 		// Get excluded taxonomies.
-		$excluded_taxonomies = isset( $settings['excluded_taxonomies'] ) ? $settings['excluded_taxonomies'] : '';
-		$excluded_tax_array  = array_map( 'trim', explode( ',', $excluded_taxonomies ) );
+		$excluded_tax_array = Oli_DP_Settings::get_excluded_taxonomy_slugs( $settings );
 
 		foreach ( $taxonomies as $taxonomy ) {
 			// Check if taxonomy should be excluded.
@@ -348,7 +339,7 @@ class Oli_DP_Duplicator {
 
 		foreach ( $children as $child ) {
 			// Recursively duplicate child posts.
-			$settings                  = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+			$settings                  = Oli_DP_Settings::get_settings();
 			$settings['copy_children'] = false; // Prevent infinite recursion.
 
 			$new_child_id = self::duplicate( $child->ID, 'clone', $settings );

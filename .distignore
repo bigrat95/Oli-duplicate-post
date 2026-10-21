@@ -1,0 +1,12 @@
+# Keep development files out of the WordPress.org ZIP.
+.gitignore
+.github/
+bin/
+tests/
+node_modules/
+vendor/
+phpcs.xml*
+phpunit.xml*
+composer.*
+package*.json
+*.md
