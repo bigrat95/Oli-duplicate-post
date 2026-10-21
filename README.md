@@ -16,11 +16,10 @@ A WordPress plugin to clone posts, pages, and custom post types with Clone, New 
   - Edit screen meta box
   - Block editor and classic editor support
 
-- **Comprehensive Settings:**
-  - Choose what to copy (title, content, meta, taxonomies, etc.)
-  - Exclude specific meta fields with wildcard support
-  - Enable/disable for specific post types
-  - Restrict access by user role
+- **Settings > Duplicate Post:**
+  - Where to duplicate (content types, roles, Rewrite & Republish)
+  - The copy (title prefix/suffix with live preview, draft or same status)
+  - Advanced copied elements, excluded taxonomies/meta, and copy-link locations
 
 - **WooCommerce Compatible:**
   - Full support for WooCommerce products including meta, attributes, and taxonomies

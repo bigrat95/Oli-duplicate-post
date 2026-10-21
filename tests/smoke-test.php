@@ -111,9 +111,12 @@ $required_files = array(
 	'admin/class-oli-dp-meta-box.php',
 	'assets/js/block-editor.js',
 	'assets/js/quick-edit.js',
+	'assets/js/settings.js',
 	'assets/css/admin.css',
 	'phpcs.xml.dist',
 	'composer.json',
+	'.distignore',
+	'.gitattributes',
 );
 
 foreach ( $required_files as $file ) {
@@ -227,11 +230,11 @@ if ( $version_in_main && $version_in_readme && $main_version[1] === $readme_vers
 }
 
 ++$total_tests;
-if ( preg_match( '/0\.1\.2/', $main_file ) ) {
-	oli_dp_test_pass( 'Plugin version is 0.1.2' );
+if ( preg_match( '/0\.2\.0/', $main_file ) ) {
+	oli_dp_test_pass( 'Plugin version is 0.2.0' );
 	++$passed_tests;
 } else {
-	oli_dp_test_fail( 'Plugin version is not 0.1.2' );
+	oli_dp_test_fail( 'Plugin version is not 0.2.0' );
 }
 
 oli_dp_test_section( 'PHP Syntax Tests' );
@@ -354,6 +357,82 @@ if ( false !== strpos( $plugin_php, 'Republish Schedule' ) ) {
 	++$passed_tests;
 } else {
 	oli_dp_test_fail( 'Scheduled republish UI missing' );
+}
+
+oli_dp_test_section( 'Settings UX Tests' );
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'Where to duplicate' ) && false !== strpos( $plugin_php, 'The copy' ) && false !== strpos( $plugin_php, 'Copied elements' ) ) {
+	oli_dp_test_pass( 'Settings page has the three required sections' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Settings page is missing a required section title' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, '<fieldset' ) && false !== strpos( $plugin_php, '<legend' ) ) {
+	oli_dp_test_pass( 'Settings groups use fieldset and legend' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Settings groups are missing fieldset/legend' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'enable_rewrite' ) && false !== strpos( $plugin_php, 'copy_thumbnail' ) ) {
+	oli_dp_test_pass( 'New settings keys enable_rewrite and copy_thumbnail are present' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'enable_rewrite or copy_thumbnail is missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'Copy created: %s' ) && false !== strpos( $plugin_php, 'Edit copy' ) ) {
+	oli_dp_test_pass( 'Success notice uses Copy created + Edit copy' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Success notice copy is missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'You are editing a copy of %s. Publish to replace the original.' ) && false !== strpos( $plugin_php, 'Compare' ) ) {
+	oli_dp_test_pass( 'Rewrite banner uses the Designer copy + Compare link' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Rewrite banner copy is missing' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'Select at least one content type.' ) ) {
+	oli_dp_test_pass( 'Empty content-type selection shows an error' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Missing error when no content type is selected' );
+}
+
+++$total_tests;
+if ( false !== strpos( $plugin_php, 'aria-live' ) && false !== strpos( $plugin_php, 'aria-describedby' ) && false !== strpos( $plugin_php, 'aria-label' ) ) {
+	oli_dp_test_pass( 'Settings and duplicate links include required ARIA attributes' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( 'Required ARIA attributes are missing' );
+}
+
+++$total_tests;
+$distignore = file_exists( $plugin_root . '/.distignore' ) ? file_get_contents( $plugin_root . '/.distignore' ) : '';
+$gitattributes = file_exists( $plugin_root . '/.gitattributes' ) ? file_get_contents( $plugin_root . '/.gitattributes' ) : '';
+$distignore_needles = array( 'tests/', 'bin/', '.github/', 'phpcs.xml', 'phpunit.xml', 'composer.', 'package', 'node_modules/', '.gitignore', '*.md' );
+$distignore_ok = ( '' !== $distignore );
+foreach ( $distignore_needles as $needle ) {
+	if ( false === strpos( $distignore, $needle ) ) {
+		$distignore_ok = false;
+		break;
+	}
+}
+if ( $distignore_ok && false !== strpos( $gitattributes, 'export-ignore' ) && false !== strpos( $gitattributes, 'tests' ) ) {
+	oli_dp_test_pass( '.distignore and .gitattributes exclude development files' );
+	++$passed_tests;
+} else {
+	oli_dp_test_fail( '.distignore or .gitattributes is missing an required exclusion' );
 }
 
 oli_dp_test_section( 'CI/CD Tests' );

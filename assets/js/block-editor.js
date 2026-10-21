@@ -40,6 +40,7 @@
 						href: cloneUrl,
 						variant: 'secondary',
 						className: 'oli-dp-block-button',
+						'aria-label': i18n.cloneLabel || i18n.clone || '',
 					},
 					i18n.clone || ''
 				),
@@ -49,6 +50,7 @@
 						href: newDraftUrl,
 						variant: 'secondary',
 						className: 'oli-dp-block-button',
+						'aria-label': i18n.newDraftLabel || i18n.newDraft || '',
 					},
 					i18n.newDraft || ''
 				),
@@ -59,6 +61,7 @@
 								href: rewriteUrl,
 								variant: 'secondary',
 								className: 'oli-dp-block-button',
+								'aria-label': i18n.rewriteLabel || i18n.rewriteRepublish || '',
 							},
 							i18n.rewriteRepublish || ''
 					  )
@@ -78,6 +81,7 @@
 					onClick: function () {
 						window.location.href = cloneUrl;
 					},
+					'aria-label': i18n.cloneLabel || i18n.clone || '',
 				},
 				i18n.clone || ''
 			),
@@ -88,6 +92,7 @@
 					onClick: function () {
 						window.location.href = newDraftUrl;
 					},
+					'aria-label': i18n.newDraftLabel || i18n.copyToNewDraft || '',
 				},
 				i18n.copyToNewDraft || ''
 			),
@@ -99,6 +104,7 @@
 							onClick: function () {
 								window.location.href = rewriteUrl;
 							},
+							'aria-label': i18n.rewriteLabel || i18n.rewriteRepublish || '',
 						},
 						i18n.rewriteRepublish || ''
 				  )

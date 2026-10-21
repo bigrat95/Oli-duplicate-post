@@ -1,0 +1,19 @@
+# Exclude development files from git archives / WordPress.org exports.
+/.distignore export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.github export-ignore
+/bin export-ignore
+/tests export-ignore
+/node_modules export-ignore
+/vendor export-ignore
+
+/phpcs.xml export-ignore
+/phpcs.xml.dist export-ignore
+/phpunit.xml export-ignore
+/phpunit.xml.dist export-ignore
+/composer.json export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/*.md export-ignore

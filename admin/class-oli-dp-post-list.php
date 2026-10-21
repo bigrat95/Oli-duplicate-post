@@ -32,7 +32,7 @@ class Oli_DP_Post_List {
 	 */
 	public static function add_row_actions( $actions, $post ) {
 		// Check if row actions should be shown.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		if ( empty( $settings['show_row_actions'] ) ) {
 			return $actions;
@@ -65,8 +65,8 @@ class Oli_DP_Post_List {
 			esc_html__( 'New Draft', 'oli-duplicate-post' )
 		);
 
-		// Rewrite & Republish action (only for published posts).
-		if ( 'publish' === $post->post_status ) {
+		// Rewrite & Republish action (only for published posts, when enabled).
+		if ( Oli_DP_Settings::is_rewrite_enabled( $settings ) && 'publish' === $post->post_status ) {
 			// Check if there's already a rewrite copy.
 			$existing_rewrite = get_post_meta( $post->ID, '_oli_dp_rewrite_copy', true );
 

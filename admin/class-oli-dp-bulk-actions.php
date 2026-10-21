@@ -35,7 +35,7 @@ class Oli_DP_Bulk_Actions {
 	 * Register bulk actions for custom post types.
 	 */
 	public static function register_custom_post_type_bulk_actions() {
-		$settings           = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings           = Oli_DP_Settings::get_settings();
 		$enabled_post_types = isset( $settings['enabled_post_types'] ) ? $settings['enabled_post_types'] : array();
 
 		foreach ( $enabled_post_types as $post_type ) {
@@ -56,7 +56,7 @@ class Oli_DP_Bulk_Actions {
 	 */
 	public static function add_bulk_actions( $actions ) {
 		// Check if bulk actions should be shown.
-		$settings = get_option( 'oli_dp_settings', Oli_DP_Settings::get_default_settings() );
+		$settings = Oli_DP_Settings::get_settings();
 
 		if ( empty( $settings['show_bulk_actions'] ) ) {
 			return $actions;

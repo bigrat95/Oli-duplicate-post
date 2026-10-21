@@ -50,7 +50,7 @@ class Oli_DP_Permissions {
 		}
 
 		// Check if post type is enabled in settings.
-		$settings           = get_option( 'oli_dp_settings', array() );
+		$settings           = Oli_DP_Settings::get_settings();
 		$enabled_post_types = isset( $settings['enabled_post_types'] ) ? $settings['enabled_post_types'] : array();
 
 		if ( ! in_array( $post->post_type, $enabled_post_types, true ) ) {
